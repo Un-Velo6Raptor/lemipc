@@ -1,0 +1,13 @@
+*.o
+#*#
+*~
+*.gcda
+a.out
+*.gcno
+test_exec
+my_cat
+test.cpp
+cmake-build-debug
+.idea
+tmp*
+lemipc
