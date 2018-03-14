@@ -24,10 +24,9 @@ static int create_memory_shared(t_data *data, key_t key)
 	str[100] = '\0';
 	data->shm_id = shmget(key, SIZE_MEMORY_SHARED,
 		IPC_CREAT | SHM_R | SHM_W);
-	data->pos = FIRST;
+	data->pos_shm = FIRST;
 	if (data->shm_id == -1)
 		return (84);
-
 	addr = shmat(data->shm_id, NULL, SHM_R | SHM_W);
 	sprintf((char *)addr, str);
 	return (0);
@@ -37,7 +36,7 @@ int initialize_memory_shared(t_data *data, key_t key)
 {
 	int ret = 0;
 
-	data->pos = UNKNOWN;
+	data->pos_shm = UNKNOWN;
 	data->shm_id = shmget(key, SIZE_MEMORY_SHARED, SHM_R | SHM_W);
 	if (data->shm_id == -1)
 		ret = create_memory_shared(data, key);

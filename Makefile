@@ -7,6 +7,8 @@
 
 SRC	=	src/check_arg.c				\
 		src/initialize_memory_shared.c		\
+		src/initialize_semaphore.c		\
+		src/initialize_msg_queue.c		\
 		src/main.c
 
 OBJ	=	$(SRC:.c=.o)
