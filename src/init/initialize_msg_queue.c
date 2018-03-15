@@ -15,6 +15,7 @@ static int create_message_queue(t_data *data, key_t key)
 {
 	int ret = 0;
 
+	data->player.captain = 1;
 	data->msgq_id = msgget(key, IPC_CREAT | SHM_R | SHM_W);
 	if (data->msgq_id == -1)
 		ret = 84;

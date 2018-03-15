@@ -65,5 +65,5 @@ int check_arg(int argc, char **argv)
 		else if (take_path(&data, argv[1]))
 			ret = 84;
 	}
-	return (ret);
+	return ((ret != 84) ? game(&data) : ret);
 }

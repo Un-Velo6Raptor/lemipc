@@ -6,14 +6,19 @@
 ##
 
 SRC	=	src/check_arg.c				\
-		src/initialize_memory_shared.c		\
-		src/initialize_semaphore.c		\
-		src/initialize_msg_queue.c		\
+		src/init/initialize_memory_shared.c	\
+		src/init/initialize_semaphore.c		\
+		src/init/initialize_msg_queue.c		\
+		src/manage/manage_memory_shared.c	\
+		src/manage/manage_semaphore.c		\
+		src/manage/manage_msg_queue.c		\
+		src/game.c				\
+		src/basics.c				\
 		src/main.c
 
 OBJ	=	$(SRC:.c=.o)
 
-CFLAGS	=	-W -Wall -Werror -Wextra -I include/
+CFLAGS	=	-W -Wall -Wextra -I include/
 
 LDFLAGS	=	-lpthread -lrt
 
