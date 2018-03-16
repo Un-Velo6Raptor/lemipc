@@ -12,7 +12,14 @@
 # include <sys/types.h>
 # include "list_enum.h"
 
-typedef struct player_info {
+typedef struct s_msg_data {
+	unsigned int team_number;
+	long mtype;
+	int is_captain;
+	char msg[256];
+} t_msg_data;
+
+typedef struct s_player_info {
 	int captain;
 	int x;
 	int y;
@@ -46,11 +53,20 @@ int initialize_msg_queue(t_data *data, key_t key);
 // Game functions
 int game(t_data *data);
 
-// Manage functions
+// Destroy functions
 void destroy_semaphore(t_data *data);
 void destroy_message_gueue(t_data *data);
 void destroy_memory_shared(t_data *data);
+
+// Manage map
 char **get_the_map(t_data *data);
 int set_new_map(t_data *data, char **map);
+
+// Manage message queue
+int send_message(t_data *data, char *str, long mtype);
+t_msg_data *read_next_message(t_data *data, long mtype);
+t_msg_data *get_next_message_team(t_data *data, long mtpye);
+t_msg_data *get_specific_message(t_data *data, long mtype, char *pattern,
+	int opt);
 
 #endif //PSU_LEMIPC_2017_TRANSMISSION_H

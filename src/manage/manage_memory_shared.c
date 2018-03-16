@@ -29,7 +29,7 @@ int set_new_map(t_data *data, char **map)
 		strcat(string_map, map[idx]);
 	}
 	addr = shmat(data->shm_id, NULL, SHM_R | SHM_W);
-	sprintf((char *)addr, string_map);
+	sprintf((char *)addr, "%s", string_map);
 	return (0);
 }
 

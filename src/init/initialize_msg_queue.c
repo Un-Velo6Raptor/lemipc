@@ -9,7 +9,7 @@
 #include <sys/msg.h>
 #include "transmission.h"
 
-static const int SIZE_MSG = 256 ;
+const int SIZE_MSG = 256;
 
 static int create_message_queue(t_data *data, key_t key)
 {

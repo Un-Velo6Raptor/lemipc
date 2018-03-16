@@ -29,7 +29,7 @@ static int create_memory_shared(t_data *data, key_t key)
 	if (data->shm_id == -1)
 		return (84);
 	addr = shmat(data->shm_id, NULL, SHM_R | SHM_W);
-	sprintf((char *)addr, str);
+	sprintf((char *)addr, "%s", str);
 	free(str);
 	return (0);
 }
