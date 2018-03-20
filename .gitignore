@@ -5,6 +5,8 @@
 cmake-build-debug
 a.out
 tests
+*.gcda
+a.out
 *.gcno
 test_exec
 my_cat
@@ -36,3 +38,5 @@ w
 x
 y
 z
+lemipc
+CMakeLists.txt
