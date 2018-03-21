@@ -8,42 +8,12 @@
 #include <config.h>
 #include <stdlib.h>
 #include <string.h>
-#include <tools.h>
+#include <stdio.h>
 #include "transmission.h"
 
 unsigned int get_distance(t_player_info *player, t_vector *pos)
 {
 	return (abs(player->pos->x - pos->x) + abs(player->pos->y - pos->y));
-}
-
-static t_vector *get_nearest(t_player_info *player, char **map, short **distance_map)
-{
-	t_vector *res = malloc(sizeof(t_vector));
-	t_vector *tmp = malloc(sizeof(t_vector));
-	short distance = -1;
-
-	if (!tmp || !res || !distance_map)
-		return NULL;
-	res->x = 0;
-	res->y = 0;
-	tmp->x = -1;
-	tmp->y = -1;
-	for (;res->y < MAP_SIZE.y; res->y++) {
-		for (res->x = 0;res->x < MAP_SIZE.x; res->x++) {
-			if (map[res->y][res->x] != ' ' && map[res->y][res->x] != player->team_number + '0'
-				&& distance_map[res->y][res->x] < distance) {
-				distance = distance_map[res->y][res->x];
-				tmp->x = res->x;
-				tmp->y = res->y;
-			}
-		}
-	}
-	free(res);
-	if (tmp->x == -1 || tmp->y == -1) {
-		free(tmp);
-		return NULL;
-	}
-	return tmp;
 }
 
 short get_distance_at(short **map, int y, int x)
@@ -63,10 +33,36 @@ short get_distance_at(short **map, int y, int x)
 	return ret;
 }
 
+static t_vector *get_nearest(t_player_info *player, char **map, short **distance_map)
+{
+	t_vector *tmp = malloc(sizeof(t_vector));
+	short distance = -1;
+
+	if (!tmp || !distance_map)
+		return NULL;
+	tmp->x = -1;
+	tmp->y = -1;
+	for (int y = 0; y < MAP_SIZE.y; y++) {
+		for (int x = 0; x < MAP_SIZE.x; x++) {
+			if (map[y][x] != ' ' && map[y][x] != player->team_number + '0'
+				&& get_distance_at(distance_map, y, x) < distance) {
+				distance = get_distance_at(distance_map, y, x);
+				tmp->x = x;
+				tmp->y = y;
+			}
+		}
+	}
+	if (tmp->x == -1 || tmp->y == -1) {
+		free(tmp);
+		return NULL;
+	}
+	return tmp;
+}
+
 void display_distancemap(short **distance_map)
 {
-	for (unsigned int i = 0; i < MAP_SIZE.y; i++) {
-		for (unsigned int j = 0; j < MAP_SIZE.x; j++) {
+	for (int i = 0; i < MAP_SIZE.y; i++) {
+		for (int j = 0; j < MAP_SIZE.x; j++) {
 			printf("%i ", distance_map[i][j]);
 		}
 		printf("\n");
@@ -84,7 +80,9 @@ static void set_distance(t_player_info *player, short **distance_map, char **map
 		distance_map[pos->y][pos->x] = 0;
 	}
 	else {
-		if (map[pos->y][pos->x] != ' ') {
+		if (map[pos->y][pos->x] < 0) {
+			distance_map[pos->y][pos->x] = map[pos->y][pos->x];
+		} else if (map[pos->y][pos->x] != ' ') {
 			distance_map[pos->y][pos->x] = -2;
 			return;
 		}
