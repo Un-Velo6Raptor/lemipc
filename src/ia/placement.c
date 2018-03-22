@@ -39,7 +39,6 @@ t_vector *get_next_case(short **distance_map, int y, int x)
 		return NULL;
 	if (act == -2)
 		act = get_distance_at(distance_map, y, x) + 1;
-	printf("pos: %i;%i = %i\n", x, y, act);
 	pos->y = y;
 	pos->x = x;
 	if (act == 1)
@@ -72,7 +71,6 @@ void move_to_target(t_player_info *player, char **map, short **distance_map, t_v
 
 	if (!next)
 		return;
-	printf("TARGET INFO\ny: %i\nx: %i\n", pos->y, pos->x);
 	map[player->pos->y][player->pos->x] = ' ';
 
 //	if (vx && distance > 1) {

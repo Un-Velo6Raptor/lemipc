@@ -20,6 +20,8 @@ int ia(t_player_info *player, char **map)
 	if (player->pos->y == -1 || player->pos->x == -1) {
 		free(player->pos);
 		player->pos = player_drop(map, player->team_number);
+		free(distance_map);
+		distance_map = get_distance_map(player, map);
 		if (!player->pos)
 			return -1;
 	}
@@ -35,5 +37,6 @@ int ia(t_player_info *player, char **map)
 	}
 	placement(map, player);
 	free(target);
+	free(distance_map);
 	return 0;
 }
