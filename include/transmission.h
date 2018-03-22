@@ -46,9 +46,9 @@ void free_tab(char **tab);
 void display_tab(char **tab);
 
 // Initialize functions
-int initialize_memory_shared(t_data *data, key_t key);
-int initialize_semaphore(t_data *data, key_t key);
-int initialize_msg_queue(t_data *data, key_t key);
+int initialize_memory_shared(t_data *data, key_t key, int opt);
+int initialize_semaphore(t_data *data, key_t key, int opt);
+int initialize_msg_queue(t_data *data, key_t key, int opt);
 
 // Game functions
 int game(t_data *data);
