@@ -27,8 +27,8 @@ int ia(t_player_info *player, char **map)
 	}
 	printf("-- BEFORE --\n");
 	display_tab(map);
+	map[player->pos->y][player->pos->x] = ' ';
 	if (is_dead(player, map)) {
-		map[player->pos->y][player->pos->x] = ' ';
 		return 1;
 	}
 	target = select_target(player, map, distance_map);
