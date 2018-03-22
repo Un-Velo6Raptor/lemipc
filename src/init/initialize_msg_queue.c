@@ -5,6 +5,7 @@
 ** Created by martin.januario@epitech.eu,
 */
 
+#include <stdio.h>
 #include <sys/shm.h>
 #include <sys/msg.h>
 #include "transmission.h"
@@ -20,12 +21,16 @@ static int create_message_queue(t_data *data, key_t key)
 	return (ret);
 }
 
-int initialize_msg_queue(t_data *data, key_t key)
+int initialize_msg_queue(t_data *data, key_t key, int opt)
 {
 	int ret = 0;
 
 	data->msgq_id = msgget(key, SHM_R | SHM_W);
-	if (data->msgq_id == -1)
+	if (data->msgq_id == -1 && opt)
 		ret = create_message_queue(data, key);
+	else if (data->msgq_id == -1) {
+		fprintf(stderr, "Error: Message queue not set\n");
+		ret = 84;
+	}
 	return (ret);
 }
