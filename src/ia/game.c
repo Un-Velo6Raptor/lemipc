@@ -38,11 +38,7 @@ static int loop_game(t_data *data, struct sembuf *sops, unsigned int index)
 		return 84;
 	}
 	if (status == 1) {
-		if (set_new_map(data, tmp) == 84) {
-			sops->sem_op = 1;
-			semop(data->sem_id, sops, 1);
-			return 84;
-		}
+		set_new_map(data, tmp);
 		sops->sem_op = 1;
 		semop(data->sem_id, sops, 1);
 		printf("You die!\n");

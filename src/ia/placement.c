@@ -53,11 +53,11 @@ t_vector *get_next_case(short **distance_map, int y, int x, bool first)
 	}
 	if (y > 0 && distance_map[y - 1][x] == act - 1) {
 		free(pos);
-		return get_next_case(distance_map, y - 1, x + 1, false);
+		return get_next_case(distance_map, y - 1, x, false);
 	}
 	if (y < MAP_SIZE.y - 1 && distance_map[y + 1][x] == act - 1) {
 		free(pos);
-		return get_next_case(distance_map, y + 1, x + 1, false);
+		return get_next_case(distance_map, y + 1, x, false);
 	}
 	return pos;
 }
@@ -71,14 +71,13 @@ void move_to_target(t_player_info *player, char **map, short **distance_map, t_v
 
 	if (!next)
 		return;
-	map[player->pos->y][player->pos->x] = ' ';
-
 //	if (vx && distance > 1) {
 //		player->pos->x -= (vx < 0) ? -1 : 1;
 //	} else if (vy && distance > 1) {
 //		player->pos->y -= (vy < 0) ? -1 : 1;
 //	}
 	if (distance > 1) {
+		printf("from: \n\tx: %i\n\ty: %i\nto:\n\tx: %i\n\ty: %i\n", player->pos->x, player->pos->y, next->x, next->y);
 		free(player->pos);
 		player->pos = next;
 	}
