@@ -30,14 +30,14 @@ void placement(char **map, t_player_info *data)
 	map[data->pos->y][data->pos->x] = data->team_number + '0';
 }
 
-t_vector *get_next_case(short **distance_map, int y, int x)
+t_vector *get_next_case(short **distance_map, int y, int x, bool first)
 {
 	t_vector *pos = malloc(sizeof(t_vector));
 	short act = distance_map[y][x];
 
 	if (!pos)
 		return NULL;
-	if (act == -2)
+	if (act == -2 && first == true)
 		act = get_distance_at(distance_map, y, x) + 1;
 	pos->y = y;
 	pos->x = x;
@@ -45,26 +45,26 @@ t_vector *get_next_case(short **distance_map, int y, int x)
 		return pos;
 	if (x > 0 && distance_map[y][x - 1] == act - 1) {
 		free(pos);
-		return get_next_case(distance_map, y, x - 1);
+		return get_next_case(distance_map, y, x - 1, false);
 	}
 	if (x < MAP_SIZE.x - 1 && distance_map[y][x + 1] == act - 1) {
 		free(pos);
-		return get_next_case(distance_map, y, x + 1);
+		return get_next_case(distance_map, y, x + 1, false);
 	}
 	if (y > 0 && distance_map[y - 1][x] == act - 1) {
 		free(pos);
-		return get_next_case(distance_map, y - 1, x + 1);
+		return get_next_case(distance_map, y - 1, x + 1, false);
 	}
 	if (y < MAP_SIZE.y - 1 && distance_map[y + 1][x] == act - 1) {
 		free(pos);
-		return get_next_case(distance_map, y + 1, x + 1);
+		return get_next_case(distance_map, y + 1, x + 1, false);
 	}
 	return pos;
 }
 
 void move_to_target(t_player_info *player, char **map, short **distance_map, t_vector *pos)
 {
-	t_vector *next = get_next_case(distance_map, pos->y, pos->x);
+	t_vector *next = get_next_case(distance_map, pos->y, pos->x, true);
 //	int vx;
 //	int vy;
 	int distance = get_distance(player, pos);
@@ -82,5 +82,4 @@ void move_to_target(t_player_info *player, char **map, short **distance_map, t_v
 		free(player->pos);
 		player->pos = next;
 	}
-	printf("pos: %i;%i\n", next->x, next->y);
 }
