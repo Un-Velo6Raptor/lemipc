@@ -5,14 +5,14 @@
 ## Created by martin.januario@epitech.eu
 ##
 
-SRC	=	src/check_arg.c				\
+SRC	=	src/parsing/check_arg.c			\
 		src/init/initialize_memory_shared.c	\
 		src/init/initialize_semaphore.c		\
 		src/init/initialize_msg_queue.c		\
 		src/manage/manage_memory_shared.c	\
 		src/manage/manage_semaphore.c		\
 		src/manage/manage_msg_queue.c		\
-		src/game.c				\
+		src/ia/game.c				\
 		src/basics.c				\
 		src/main.c				\
 		src/config.c				\

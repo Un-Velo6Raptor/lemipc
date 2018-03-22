@@ -39,9 +39,9 @@ static int take_path(t_data *data, char *str)
 	} else {
 		key = ftok(str, 0);
 		if (key != -1) {
-			ret = initialize_memory_shared(data, key);
-			ret += initialize_semaphore(data, key);
-			ret += initialize_msg_queue(data, key);
+			ret = initialize_memory_shared(data, key, 1);
+			ret += initialize_semaphore(data, key, 1);
+			ret += initialize_msg_queue(data, key, 1);
 		} else {
 			ret = 84;
 			fprintf(stderr, "Error: Can't create the key\n");
