@@ -36,7 +36,7 @@ short get_distance_at(short **map, int y, int x)
 static t_vector *get_nearest(t_player_info *player, char **map, short **distance_map)
 {
 	t_vector *tmp = malloc(sizeof(t_vector));
-	short distance = -1;
+	short distance = MAP_SIZE.x + MAP_SIZE.y;
 
 	if (!tmp || !distance_map)
 		return NULL;
