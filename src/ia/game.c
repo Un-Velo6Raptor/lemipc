@@ -11,13 +11,16 @@
 #include <unistd.h>
 #include <sys/sem.h>
 #include <time.h>
-#include <config.h>
+#include "config.h"
 #include "transmission.h"
 #include "ia.h"
+#include "end.h"
 
 static int loop_game(t_data *data, struct sembuf *sops, unsigned int index)
 {
-	static int i = 0;
+	static unsigned int i = 0;
+	int status;
+	char **tmp;
 
 	// ANNONCE de l'utilisation de la map
 	printf("-- WAIT\n");
@@ -25,43 +28,29 @@ static int loop_game(t_data *data, struct sembuf *sops, unsigned int index)
 	semop(data->sem_id, sops, 1);
 	printf("-- EXEC\n");
 
-	char **tmp = get_the_map(data);
-	if (!tmp) {
-		sops->sem_op = 1;
-		semop(data->sem_id, sops, 1);
-		return 84;
+	tmp = get_the_map(data);
+	if (!tmp)
+		return end_game(data, tmp, sops, 84);
+	if (i > 1 && ended(tmp)) {
+		return end_game(data, tmp, sops, 0);
 	}
-	int status = ia(data->player, tmp);
-	if (status == -1) {
-		sops->sem_op = 1;
-		semop(data->sem_id, sops, 1);
-		return 84;
-	}
+	status = ia(data->player, tmp);
+	if (status == -1)
+		return end_game(data, tmp, sops, 84);
 	if (status == 1) {
-		set_new_map(data, tmp);
-		sops->sem_op = 1;
-		semop(data->sem_id, sops, 1);
 		printf("You die!\n");
-		return 0;
+		return end_game(data, tmp, sops, 1);
 	}
 	printf("-- AFTER --\n");
 	display_tab(tmp);
-	usleep(300000);
-	if (i == MAX_ACTION_NUMBER) // todo delete
+	if (i == MAX_ACTION_NUMBER) {
 		tmp[data->player->pos->y][data->player->pos->x] = ' ';
-	if (set_new_map(data, tmp) == 84) {
-		sops->sem_op = 1;
-		semop(data->sem_id, sops, 1);
-		return 84;
+		return end_game(data, tmp, sops, 0);
 	}
-	free_tab(tmp);
-
-	// ANNONCE de la "libération" de la map
-	sops->sem_op = 1;
-	semop(data->sem_id, sops, 1);
-
-	if (i == MAX_ACTION_NUMBER)
-		return 0; // TODO delete;
+	if (end_game(data, tmp, sops, 0) == 84)
+		return 84;
+	if (i == 0)
+		sleep(1);
 	i++;
 	return (loop_game(data, sops, index + 1));
 }
@@ -71,14 +60,26 @@ int game(t_data *data)
 {
 	struct sembuf sops; // sem_op=-1: U start ur action, sem_op=1: you end it
 	int ret;
+	char **tmp = NULL;
 
 	printf("SEM_ID: %d\n", data->sem_id);
 	sops.sem_num = 0;
 	sops.sem_flg = 0;
 	srand(time(NULL));
 	ret = loop_game(data, &sops, 0);
-	destroy_memory_shared(data);
-	destroy_message_queue(data);
-	destroy_semaphore(data);
+	do {
+		if (tmp)
+			free_tab(tmp);
+		tmp = get_the_map(data);
+		if (data->pos == FIRST)
+			display_tab(tmp);
+		usleep(100000);
+	} while (ended(tmp) == false);
+	if (data->pos == FIRST) {
+		destroy_memory_shared(data);
+		destroy_message_queue(data);
+		destroy_semaphore(data);
+	}
+	free_tab(tmp);
 	return (ret);
 }

@@ -24,7 +24,6 @@ static char **wait_free_map(t_data *data, struct sembuf *sops, t_window *sdl_map
 		semop(data->sem_id, sops, 1);
 		return (NULL);
 	}
-	usleep(300000);
 	sops->sem_op = 1;
 	semop(data->sem_id, sops, 1);
 	return (tmp);
