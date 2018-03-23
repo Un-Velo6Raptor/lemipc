@@ -28,7 +28,6 @@ static int draw_interface(t_data *data, t_window *sdl_data)
 		sops.sem_op = 1;
 		semop(data->sem_id, &sops, 1);
 	}
-
 	SDL_SetRenderDrawColor(sdl_data->renderer, 255, 255, 255, 255);
 	map = get_the_map(data);
 	if (map) {

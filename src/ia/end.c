@@ -6,8 +6,9 @@
 */
 
 #include <stdio.h>
-#include <transmission.h>
-#include <config.h>
+#include "transmission.h"
+#include "sys/sem.h"
+#include "config.h"
 
 static int is_enemy(t_player_info *player, char **map, int y, int x)
 {
@@ -33,4 +34,33 @@ bool is_dead(t_player_info *player, char **map)
 	nb += is_enemy(player, map, pos->y - 1, pos->x + 1);
 	nb += is_enemy(player, map, pos->y - 1, pos->x - 1);
 	return nb > 1 ? true : false;
+}
+
+bool ended(char **map)
+{
+	char team = ' ';
+	bool found = false;
+	bool end = true;
+
+	for (int y = 0; y < MAP_SIZE.y; y++) {
+		for (int x = 0; x < MAP_SIZE.x; x++) {
+			end = (found == true && map[y][x] != team && map[y][x] != ' ') ? false : end;
+			found = (found == false && map[y][x] != team) ? true : found;
+			team = map[y][x] != ' ' ? map[y][x] : team;
+		}
+	}
+	return (end);
+}
+
+int end_game(t_data *data, char **map, struct sembuf *sops, int ret)
+{
+	printf("--END\n");
+	display_tab(map);
+	if (map && set_new_map(data, map) == 84)
+		ret = 84;
+	sops->sem_op = 1;
+	semop(data->sem_id, sops, 1);
+	if (map)
+		free_tab(map);
+	return ret;
 }
