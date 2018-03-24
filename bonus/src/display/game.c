@@ -35,7 +35,7 @@ static int draw_interface(t_data *data, t_window *sdl_data)
 		draw_map_sdl(sdl_data, map);
 	}
 	draw_tools(sdl_data);
-	free_tab((void **) map);
+	free_tab((void **)map);
 	last_tools = sdl_data->tools_used;
 	return (0);
 }
@@ -54,7 +54,9 @@ static int manage_event(t_data *data, t_window *sdl_data, SDL_Event *event)
 
 	if (event->type == SDL_MOUSEBUTTONDOWN)
 		check = true;
-	else if (event->type == SDL_MOUSEBUTTONUP)
+	else if (event->type == SDL_MOUSEBUTTONUP ||
+		(event->button.y > WINDOW_HEIGHT - TOOLS_HEIGHT &&
+			event->button.x > MSG_WIDTH))
 		check = false;
 	if (event->type == SDL_MOUSEWHEEL)
 		update_team_adder(sdl_data, event->wheel.y);
