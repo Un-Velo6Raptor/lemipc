@@ -15,7 +15,7 @@ static int is_enemy(t_player_info *player, char **map, int y, int x)
 	if (y >= MAP_SIZE.y || y < 0 || x >= MAP_SIZE.x || x < 0) {
 		return 0;
 	}
-	if (map[y][x] != ' ' && map[y][x] != player->team_number + '0')
+	if (map[y][x] != ' ' && map[y][x] != player->team_number + '0' && map[y][x] > 0)
 		return 1;
 	return 0;
 }
