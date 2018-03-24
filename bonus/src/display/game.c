@@ -11,6 +11,7 @@
 #include <sys/sem.h>
 #include "transmission.h"
 #include "display.h"
+#include "config.h"
 
 static int draw_interface(t_data *data, t_window *sdl_data)
 {
@@ -41,7 +42,10 @@ static int draw_interface(t_data *data, t_window *sdl_data)
 
 static void update_team_adder(t_window *sdl_data, int scroll)
 {
-	if (scroll > 0 && sdl_data)
+	if (scroll > 0 && sdl_data->team_wheel < strlen(TEAMS) - 1)
+		sdl_data->team_wheel++;
+	else if (scroll < 0 && sdl_data->team_wheel > 0)
+		sdl_data->team_wheel--;
 }
 
 static int manage_event(t_data *data, t_window *sdl_data, SDL_Event *event)
@@ -81,7 +85,7 @@ static int loop_game(t_data *data, t_window *sdl_data)
 	return (0);
 }
 
-int game(t_data *data)
+int graphical_display(t_data *data)
 {
 	t_window sdl_data;
 	struct sembuf sops;

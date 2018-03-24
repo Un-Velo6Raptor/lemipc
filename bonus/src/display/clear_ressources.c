@@ -15,7 +15,7 @@ void destroy_sdl_tools(t_window *sdl_data)
 	for (int idx = 0; sdl_data->image[idx]; ++idx) {
 		SDL_DestroyTexture(sdl_data->image[idx]);
 	}
-
+	TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();
 }
