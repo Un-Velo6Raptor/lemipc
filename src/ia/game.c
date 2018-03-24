@@ -36,7 +36,8 @@ static int loop_game(t_data *data, struct sembuf *sops, unsigned int index)
 			return end_game(data, tmp, sops, 0);
 		}
 		end++;
-	}
+	} else
+		end = 0;
 	status = ia(data->player, tmp);
 	if (status == -1)
 		return end_game(data, tmp, sops, 84);
