@@ -10,6 +10,8 @@
 
 #include "tools.h"
 
+extern char const * const TEAMS;
+
 extern const t_vector MAP_SIZE;
 
 extern const unsigned int MSG_SIZE;

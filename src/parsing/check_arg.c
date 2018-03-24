@@ -6,9 +6,10 @@
 */
 
 #include <stdlib.h>
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
 #include "transmission.h"
+#include "config.h"
 
 static int take_team_number(t_data *data, char *str)
 {
@@ -20,11 +21,13 @@ static int take_team_number(t_data *data, char *str)
 	if (idx && strlen(str) == idx) {
 		data->player->team_number = (unsigned char)atoi(str);
 	}
-	if (!data->player->team_number) {
+	if (!data->player->team_number
+		|| data->player->team_number >= strlen(TEAMS)) {
 		fprintf(stderr, "Error: TEAM_NUMBER must be "
-			"a valid and positiv number\n");
+			"between 0 and %lu\n", strlen(TEAMS));
 		ret = 84;
-	}
+	} else
+		data->player->team_number = (unsigned char) TEAMS[data->player->team_number];
 	return (ret);
 }
 

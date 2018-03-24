@@ -15,7 +15,8 @@ static int is_enemy(t_player_info *player, char **map, int y, int x)
 	if (y >= MAP_SIZE.y || y < 0 || x >= MAP_SIZE.x || x < 0) {
 		return 0;
 	}
-	if (map[y][x] != ' ' && map[y][x] != player->team_number + '0' && map[y][x] > 0)
+	if (map[y][x] != ' ' && map[y][x] != player->team_number
+		&& map[y][x] > 0)
 		return 1;
 	return 0;
 }
@@ -44,9 +45,13 @@ bool ended(char **map)
 
 	for (int y = 0; y < MAP_SIZE.y; y++) {
 		for (int x = 0; x < MAP_SIZE.x; x++) {
-			end = (found == true && map[y][x] != team && map[y][x] != ' ' && map[y][x] > 0) ? false : end;
-			found = (found == false && map[y][x] != team && map[y][x] > 0) ? true : found;
-			team = map[y][x] != ' ' && map[y][x] > 0 ? map[y][x] : team;
+			end = (found == true && map[y][x] != team &&
+				map[y][x] != ' ' && map[y][x] > 0)
+				? false : end;
+			found = (found == false && map[y][x] != team
+				&& map[y][x] > 0) ? true : found;
+			team = map[y][x] != ' ' && map[y][x] > 0
+				? map[y][x] : team;
 		}
 	}
 	return (end);
@@ -54,13 +59,12 @@ bool ended(char **map)
 
 int end_game(t_data *data, char **map, struct sembuf *sops, int ret)
 {
-	printf("--END\n");
 	display_tab(map);
 	if (map && set_new_map(data, map) == 84)
 		ret = 84;
 	sops->sem_op = 1;
 	semop(data->sem_id, sops, 1);
 	if (map)
-		free_tab(map);
+		free_tab((void **) map);
 	return ret;
 }
