@@ -50,6 +50,8 @@ static int loop_game(t_data *data, struct sembuf *sops, unsigned int index)
 		return 84;
 	if (i == 0)
 		sleep(1);
+	else
+		usleep(300000);
 	i++;
 	return (loop_game(data, sops, index + 1));
 }

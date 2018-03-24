@@ -43,6 +43,7 @@ static int loop_game(t_data *data, t_window *sdl_data)
 {
 	bool running = true;
 	SDL_Event event;
+	bool check = false;
 
 	while (running) {
 		SDL_SetRenderDrawColor(sdl_data->renderer, 255, 255, 255, 255);
@@ -53,6 +54,10 @@ static int loop_game(t_data *data, t_window *sdl_data)
 					event.key.keysym.sym == SDLK_ESCAPE)) {
 				running = false;
 			} else if (event.type == SDL_MOUSEBUTTONDOWN)
+				check = true;
+			else if (event.type == SDL_MOUSEBUTTONUP)
+				check = false;
+			if (check)
 				check_mouse_click(data, sdl_data, &event);
 		}
 		if (draw_interface(data, sdl_data) == 84)

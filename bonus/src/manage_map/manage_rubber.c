@@ -10,8 +10,20 @@
 
 int tools_manage_rubber(t_data *data, t_window *sdl_data, SDL_Event *ev)
 {
-	(void)data;
+	char **map = get_the_map(data);
+	t_vector size = get_block_size();
+	t_vector index = {-1, -1};
+
 	(void)sdl_data;
-	(void)ev;
+	if (!map) {
+		return (84);
+	}
+	index.x = (ev->button.x - MSG_WIDTH) / size.x;
+	index.y = ev->button.y / size.y;
+	if (map[index.y][index.x] <= -3) {
+		map[index.y][index.x] = ' ';
+		set_new_map(data, map);
+	}
+	free_tab(map);
 	return (0);
 }

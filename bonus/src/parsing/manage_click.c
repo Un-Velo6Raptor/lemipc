@@ -35,7 +35,7 @@ static int manage_tools_select(t_window *sdl_data, SDL_Event *ev)
 
 int check_mouse_click(t_data *data, t_window *sdl_data, SDL_Event *ev)
 {
-	if (sdl_data->tools_used != -1 &&
+	if (sdl_data->tools_used != -1 && ev->button.x > MSG_WIDTH &&
 		ev->button.y < WINDOW_HEIGHT - TOOLS_HEIGHT) {
 		manage_features(data, sdl_data, ev);
 	} else if (ev->button.x > MSG_WIDTH &&
