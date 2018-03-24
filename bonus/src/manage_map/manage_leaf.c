@@ -8,20 +8,22 @@
 #include "display.h"
 #include "config.h"
 
+static const char WALL_LEAF = -4;
+
 static int put_a_tree_here(char **map, t_vector *index)
 {
 	int ret = 84;
 
 	if (map[index->y][index->x] == ' ') {
-		map[index->y][index->x] = -4;
+		map[index->y][index->x] = WALL_LEAF;
 		if (index->x > 0 && map[index->y][index->x - 1] == ' ')
-			map[index->y][index->x - 1] = -4;
+			map[index->y][index->x - 1] = WALL_LEAF;
 		if (map[index->y][index->x + 1] == ' ')
-			map[index->y][index->x + 1] = -4;
+			map[index->y][index->x + 1] = WALL_LEAF;
 		if (map[index->y + 1] && map[index->y + 1][index->x] == ' ')
-			map[index->y + 1][index->x] = -4;
+			map[index->y + 1][index->x] = WALL_LEAF;
 		if (index->y > 0 && map[index->y - 1][index->x] == ' ')
-			map[index->y - 1][index->x] = -4;
+			map[index->y - 1][index->x] = WALL_LEAF;
 		ret = 0;
 	}
 
