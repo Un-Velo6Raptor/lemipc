@@ -20,9 +20,19 @@ SRC_DISPLAY	=	src/display/game.c				\
 			src/display/init_window.c			\
 			src/display/draw_map.c				\
 			src/display/draw_player.c			\
+			src/display/draw_tools.c			\
+			src/parsing/manage_click.c			\
 			src/parsing/check_arg.c
 
+SRC_MANAGE	=	src/manage_map/manage_leaf.c			\
+			src/manage_map/manage_wall.c			\
+			src/manage_map/manage_water.c			\
+			src/manage_map/manage_rubber.c			\
+			src/manage_map/manage_reset.c			\
+			src/manage_map/manage_player.c
+
 OBJ		=	$(SRC:.c=.o)					\
+			$(SRC_MANAGE:.c=.o)				\
 			$(SRC_DISPLAY:.c=.o)
 
 SDL_CFLAGS	:=	$(shell sdl2-config --cflags)
@@ -33,7 +43,7 @@ CFLAGS		=	-W -Wall -Wextra $(SDL_CFLAGS)			\
 			-I include/					\
 			-I ../include/
 
-LDFLAGS		=	-lpthread -lrt $(SDL_LDFLAGS)
+LDFLAGS		=	-lpthread -lrt -lSDL2_image $(SDL_LDFLAGS)
 
 NAME		=	ipc_map
 

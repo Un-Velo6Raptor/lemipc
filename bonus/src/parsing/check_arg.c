@@ -13,9 +13,9 @@
 static int initialize_ipc(t_data *data, key_t key)
 {
 	int ret = 0;
-	ret = initialize_memory_shared(data, key, 0);
-	ret += initialize_semaphore(data, key, 0);
-	ret += initialize_msg_queue(data, key, 0);
+	ret = initialize_memory_shared(data, key, 1);
+	ret += initialize_semaphore(data, key, 1);
+	ret += initialize_msg_queue(data, key, 1);
 	return (ret);
 }
 

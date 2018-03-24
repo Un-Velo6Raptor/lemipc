@@ -14,16 +14,14 @@ static void fill_rect_player(t_window *sdl_data, t_vector *block_size,
 {
 	SDL_Rect block;
 
-	printf("Print player Rect\n");
-	SDL_SetRenderDrawColor(sdl_data->renderer, player->r, player->g, player->b, 255);
+	SDL_SetRenderDrawColor(sdl_data->renderer, player->r, player->g,
+		player->b, 255);
 
 	block.x = MSG_WIDTH + (idx->x * block_size->x) + 1;
 	block.w = block_size->x - 1;
 
 	block.y = (idx->y * block_size->y) + 1;
 	block.h = block_size->y - 1;
-
-	printf("RECT: (%d, %d), (%d, %d)\n", block.x, block.w, block.y, block.h);
 
 	SDL_RenderFillRect(sdl_data->renderer, &block);
 }
@@ -32,15 +30,19 @@ static void check_representation(t_window *sdl_map, t_vector *block_size,
 	char representation, t_vector *idx
 )
 {
-	t_team *tmp = sdl_map->list_team;
+	t_team *header = sdl_map->list_team;
 
 	if (representation == ' ')
 		return;
-	while (tmp) {
-		if (tmp->representation == representation)
-			fill_rect_player(sdl_map, block_size, tmp, idx);
-		tmp = tmp->next;
+	while (sdl_map->list_team) {
+		if (sdl_map->list_team->representation == representation) {
+			fill_rect_player(sdl_map, block_size,
+				sdl_map->list_team, idx);
+			break;
+		}
+		sdl_map->list_team = sdl_map->list_team->next;
 	}
+	sdl_map->list_team = header;
 }
 
 void draw_player(t_window *sdl_map, t_vector *block_size, char **map)

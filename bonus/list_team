@@ -1,0 +1,13 @@
+src/display/draw_map.c:27:	SDL_SetRenderDrawColor(sdl_map->renderer, 0, 0, 0, 255);
+src/display/draw_map.c:30:		SDL_RenderDrawLine(sdl_map->renderer, MSG_WIDTH, idx_height,
+src/display/draw_map.c:35:		SDL_RenderDrawLine(sdl_map->renderer, idx_width, 0, idx_width,
+src/display/draw_map.c:42:	t_team *header = sdl_map->list_team;
+src/display/draw_map.c:46:	while (sdl_map->list_team && sdl_map->list_team->next &&
+src/display/draw_map.c:47:		sdl_map->list_team->representation != player)
+src/display/draw_map.c:48:		sdl_map->list_team = sdl_map->list_team->next;
+src/display/draw_map.c:49:	if (sdl_map->list_team && sdl_map->list_team->representation == player)
+src/display/draw_map.c:60:	if (!sdl_map->list_team)
+src/display/draw_map.c:61:		sdl_map->list_team = new_team;
+src/display/draw_map.c:63:		sdl_map->list_team->next = new_team;
+src/display/draw_map.c:64:		sdl_map->list_team = header;
+src/display/draw_player.c:33:	t_team *tmp = sdl_map->list_team;

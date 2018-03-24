@@ -25,12 +25,12 @@ static t_vector get_block_size(void)
 static void draw_grid(t_window *sdl_map, t_vector *block_size)
 {
 	SDL_SetRenderDrawColor(sdl_map->renderer, 0, 0, 0, 255);
-	for (int idx_height = block_size->y; idx_height <=
+	for (int idx_height = 0; idx_height <=
 		WINDOW_HEIGHT - TOOLS_HEIGHT; idx_height += block_size->y) {
 		SDL_RenderDrawLine(sdl_map->renderer, MSG_WIDTH, idx_height,
 			WINDOW_WIDTH, idx_height);
 	}
-	for (int idx_width = block_size->x + MSG_WIDTH;
+	for (int idx_width = MSG_WIDTH;
 		idx_width <= WINDOW_WIDTH; idx_width += block_size->x) {
 		SDL_RenderDrawLine(sdl_map->renderer, idx_width, 0, idx_width,
 			WINDOW_HEIGHT - TOOLS_HEIGHT);
@@ -49,6 +49,7 @@ static int check_new_color(t_window *sdl_map, char player)
 	t_team *new_team = malloc(sizeof(t_team) * 1);
 	if (!new_team)
 		return (84);
+	printf("-- player [%c]\n", player);
 	new_team->next = NULL;
 	new_team->r = rand() % 255;
 	new_team->g = rand() % 255;
