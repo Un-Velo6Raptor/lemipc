@@ -23,20 +23,23 @@ bool can_drop(char **map)
 	return can;
 }
 
-t_vector *player_drop(char **map, unsigned char team)
+void player_drop(t_player_info *player, char **map)
 {
 	t_vector *pos = malloc(sizeof(pos));
 
 	if (!pos || !can_drop(map)) {
+		free(player->pos);
 		fprintf(stderr, "Player can't drop\n");
-		return NULL;
+		player->pos = NULL;
+		return;
 	}
 	do {
 		pos->x = rand() % MAP_SIZE.x;
 		pos->y = rand() % MAP_SIZE.y;
 	} while (map[pos->y][pos->x] != ' ');
-	map[pos->y][pos->x] = team;
-	return pos;
+	map[pos->y][pos->x] = player->team_number;
+	free(player->pos);
+	player->pos = pos;
 }
 
 void placement(char **map, t_player_info *data)
@@ -60,16 +63,14 @@ t_vector *get_next_case(short **distance_map, int y, int x, bool first)
 	if (x > 0 && distance_map[y][x - 1] == act - 1) {
 		free(pos);
 		return get_next_case(distance_map, y, x - 1, false);
-	}
-	if (x < MAP_SIZE.x - 1 && distance_map[y][x + 1] == act - 1) {
+	} else if (x < MAP_SIZE.x - 1 && distance_map[y][x + 1] == act - 1) {
 		free(pos);
 		return get_next_case(distance_map, y, x + 1, false);
 	}
 	if (y > 0 && distance_map[y - 1][x] == act - 1) {
 		free(pos);
 		return get_next_case(distance_map, y - 1, x, false);
-	}
-	if (y < MAP_SIZE.y - 1 && distance_map[y + 1][x] == act - 1) {
+	} else if (y < MAP_SIZE.y - 1 && distance_map[y + 1][x] == act - 1) {
 		free(pos);
 		return get_next_case(distance_map, y + 1, x, false);
 	}
@@ -78,9 +79,14 @@ t_vector *get_next_case(short **distance_map, int y, int x, bool first)
 
 void move_to_target(t_player_info *player, short **distance_map, t_vector *pos)
 {
-	t_vector *next = get_next_case(distance_map, pos->y, pos->x, true);
-	int distance = get_distance(player, pos);
+	t_vector *next = NULL;
+	int distance;
 
+	if (!pos)
+		return;
+	next = get_next_case(distance_map, pos->y, pos->x, true);
+	distance = get_distance(player, pos);
+	free(pos);
 	if (!next)
 		return;
 	if (distance > 1) {

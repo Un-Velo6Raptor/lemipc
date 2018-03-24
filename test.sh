@@ -3,9 +3,9 @@ make debug
 
 for (( c=1; c<=$2 ; c++ ))
 do
-    for (( d=0; d<62; d++ ))
+    for (( d=0; d<=3; d++ ))
     do
         ./lemipc $1 $d > a&
-        sleep 0.1
+        sleep 0.2
     done
 done

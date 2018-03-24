@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/sem.h>
-#include <time.h>
 #include "config.h"
 #include "transmission.h"
 #include "ia.h"
@@ -23,7 +22,8 @@ static int loop_game(t_data *data, struct sembuf *sops, unsigned int index)
 	char **tmp;
 
 	// ANNONCE de l'utilisation de la map
-	printf("\033[3J\033[H\033[2J");
+	if (data->pos == FIRST)
+		printf("\033[3J\033[H\033[2J");
 	sops->sem_op = -1;
 	semop(data->sem_id, sops, 1);
 	tmp = get_the_map(data);
@@ -40,7 +40,8 @@ static int loop_game(t_data *data, struct sembuf *sops, unsigned int index)
 		printf("You die!\n");
 		return end_game(data, tmp, sops, 1);
 	}
-	display_tab(tmp);
+	if (data->pos == FIRST)
+		display_tab(tmp);
 	if (i == MAX_ACTION_NUMBER) {
 		tmp[data->player->pos->y][data->player->pos->x] = ' ';
 		return end_game(data, tmp, sops, 0);
@@ -72,13 +73,13 @@ int game(t_data *data)
 		tmp = get_the_map(data);
 		if (data->pos == FIRST)
 			display_tab(tmp);
-		usleep(100000);
+		sleep(1);
 	} while (ended(tmp) == false);
 	if (data->pos == FIRST) {
 		destroy_memory_shared(data);
 		destroy_message_queue(data);
 		destroy_semaphore(data);
 	}
-	free_tab((void **) tmp);
+	free_tab((void **)tmp);
 	return (ret);
 }

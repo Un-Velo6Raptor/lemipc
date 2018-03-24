@@ -128,6 +128,5 @@ t_vector *select_target(t_player_info *player, char **map, short **distance_map)
 {
 	t_vector *nearest = get_nearest(player, map, distance_map);
 
-	display_distancemap(distance_map);
 	return nearest;
 }
