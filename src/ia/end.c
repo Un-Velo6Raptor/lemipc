@@ -44,9 +44,9 @@ bool ended(char **map)
 
 	for (int y = 0; y < MAP_SIZE.y; y++) {
 		for (int x = 0; x < MAP_SIZE.x; x++) {
-			end = (found == true && map[y][x] != team && map[y][x] != ' ') ? false : end;
-			found = (found == false && map[y][x] != team) ? true : found;
-			team = map[y][x] != ' ' ? map[y][x] : team;
+			end = (found == true && map[y][x] != team && map[y][x] != ' ' && map[y][x] > 0) ? false : end;
+			found = (found == false && map[y][x] != team && map[y][x] > 0) ? true : found;
+			team = map[y][x] != ' ' && map[y][x] > 0 ? map[y][x] : team;
 		}
 	}
 	return (end);
