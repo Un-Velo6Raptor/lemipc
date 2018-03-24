@@ -24,6 +24,6 @@ int tools_manage_reset(t_data *data, t_window *sdl_data, SDL_Event *ev)
 		}
 	}
 	set_new_map(data, map);
-	free_tab(map);
+	free_tab((void **) map);
 	return (0);
 }

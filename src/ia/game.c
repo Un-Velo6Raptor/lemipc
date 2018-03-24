@@ -23,11 +23,9 @@ static int loop_game(t_data *data, struct sembuf *sops, unsigned int index)
 	char **tmp;
 
 	// ANNONCE de l'utilisation de la map
-	printf("-- WAIT\n");
+	printf("\033[3J\033[H\033[2J");
 	sops->sem_op = -1;
 	semop(data->sem_id, sops, 1);
-	printf("-- EXEC\n");
-
 	tmp = get_the_map(data);
 	if (!tmp)
 		return end_game(data, tmp, sops, 84);
@@ -42,7 +40,6 @@ static int loop_game(t_data *data, struct sembuf *sops, unsigned int index)
 		printf("You die!\n");
 		return end_game(data, tmp, sops, 1);
 	}
-	printf("-- AFTER --\n");
 	display_tab(tmp);
 	if (i == MAX_ACTION_NUMBER) {
 		tmp[data->player->pos->y][data->player->pos->x] = ' ';
@@ -65,14 +62,13 @@ int game(t_data *data)
 	int ret;
 	char **tmp = NULL;
 
-	printf("SEM_ID: %d\n", data->sem_id);
 	sops.sem_num = 0;
 	sops.sem_flg = 0;
 	srand(time(NULL));
 	ret = loop_game(data, &sops, 0);
 	do {
 		if (tmp)
-			free_tab(tmp);
+			free_tab((void **) tmp);
 		tmp = get_the_map(data);
 		if (data->pos == FIRST)
 			display_tab(tmp);
@@ -83,6 +79,6 @@ int game(t_data *data)
 		destroy_message_queue(data);
 		destroy_semaphore(data);
 	}
-	free_tab(tmp);
+	free_tab((void **) tmp);
 	return (ret);
 }

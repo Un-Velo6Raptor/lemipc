@@ -42,7 +42,7 @@ typedef struct s_data {
 int check_arg_and_launch(int argc, char **argv);
 
 // Basics functions
-void free_tab(char **tab);
+void free_tab(void **tab);
 void display_tab(char **tab);
 
 // Initialize functions

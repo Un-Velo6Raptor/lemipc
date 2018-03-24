@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include "transmission.h"
 
-void free_tab(char **tab)
+void free_tab(void **tab)
 {
 	for (int idx = 0; tab && tab[idx]; ++idx) {
 		free(tab[idx]);
