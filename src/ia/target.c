@@ -45,7 +45,8 @@ static t_vector *get_nearest(t_player_info *player, char **map, short **distance
 	for (int y = 0; y < MAP_SIZE.y; y++) {
 		for (int x = 0; x < MAP_SIZE.x; x++) {
 			if (map[y][x] != ' ' && map[y][x] != player->team_number + '0'
-				&& get_distance_at(distance_map, y, x) < distance) {
+				&& get_distance_at(distance_map, y, x) < distance &&
+				get_distance_at(distance_map, y, x) > 0) {
 				distance = get_distance_at(distance_map, y, x);
 				tmp->x = x;
 				tmp->y = y;
@@ -82,6 +83,7 @@ static void set_distance(t_player_info *player, short **distance_map, char **map
 	else {
 		if (map[pos->y][pos->x] < 0) {
 			distance_map[pos->y][pos->x] = map[pos->y][pos->x];
+			return;
 		} else if (map[pos->y][pos->x] != ' ') {
 			distance_map[pos->y][pos->x] = -2;
 			return;
