@@ -32,6 +32,7 @@ static int loop_game(t_data *data, struct sembuf *sops, unsigned int index)
 	if (!tmp)
 		return end_game(data, tmp, sops, 84);
 	if (i > 1 && ended(tmp)) {
+		tmp[data->player->pos->y][data->player->pos->x] = ' ';
 		return end_game(data, tmp, sops, 0);
 	}
 	status = ia(data->player, tmp);

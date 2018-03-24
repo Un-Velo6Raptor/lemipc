@@ -64,4 +64,8 @@ debug:			CFLAGS += -ggdb3
 
 debug:			re
 
-.PHONY:			all clean fclean re debug
+install:
+			sudo apt-get install libsdl2-dev
+			sudo apt-get install libsdl2-image-dev
+
+.PHONY:			all clean fclean re debug install
