@@ -23,10 +23,9 @@ static int loop_game(t_data *data, struct sembuf *sops, unsigned int index)
 	char **tmp;
 
 	// ANNONCE de l'utilisation de la map
-	printf("-- WAIT\n");
+	printf("\033[3J\033[H\033[2J");
 	sops->sem_op = -1;
 	semop(data->sem_id, sops, 1);
-	printf("-- EXEC\n");
 	tmp = get_the_map(data);
 	if (!tmp)
 		return end_game(data, tmp, sops, 84);

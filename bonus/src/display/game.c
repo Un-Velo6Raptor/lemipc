@@ -34,7 +34,7 @@ static int draw_interface(t_data *data, t_window *sdl_data)
 		draw_map_sdl(sdl_data, map);
 	}
 	draw_tools(sdl_data);
-	free_tab(map);
+	free_tab((void **) map);
 	last_tools = sdl_data->tools_used;
 	return (0);
 }

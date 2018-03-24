@@ -42,6 +42,6 @@ int tools_manage_leaf(t_data *data, t_window *sdl_data, SDL_Event *ev)
 	index.y = ev->button.y / size.y;
 	if (!put_a_tree_here(map, &index))
 		set_new_map(data, map);
-	free_tab(map);
+	free_tab((void **) map);
 	return (0);
 }

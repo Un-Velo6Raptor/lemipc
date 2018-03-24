@@ -6,6 +6,6 @@ do
     for (( d=0; d<62; d++ ))
     do
         ./lemipc $1 $d > a&
-        sleep 0.2
+        sleep 0.1
     done
 done

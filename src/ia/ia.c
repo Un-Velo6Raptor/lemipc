@@ -21,9 +21,9 @@ int ia(t_player_info *player, char **map)
 		free(player->pos);
 		player->pos = player_drop(map, player->team_number);
 		free_tab((void **)distance_map);
-		distance_map = get_distance_map(player, map);
 		if (!player->pos)
 			return -1;
+		distance_map = get_distance_map(player, map);
 	}
 	map[player->pos->y][player->pos->x] = ' ';
 	if (is_dead(player, map)) {

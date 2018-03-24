@@ -17,7 +17,7 @@ bool can_drop(char **map)
 
 	for (int y = 0; y < MAP_SIZE.y; y++) {
 		for (int x = 0; x < MAP_SIZE.x; x++) {
-			can = (map[y][x] == ' ') ? (true) : (false);
+			can = (map[y][x] == ' ') ? (true) : (can);
 		}
 	}
 	return can;
