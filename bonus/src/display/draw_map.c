@@ -50,9 +50,9 @@ static int check_new_color(t_window *sdl_map, char player)
 	if (!new_team)
 		return (84);
 	new_team->next = NULL;
-	new_team->r = rand() % 255;
-	new_team->g = rand() % 255;
-	new_team->b = rand() % 255;
+	new_team->r = rand() % 220;
+	new_team->g = rand() % 220;
+	new_team->b = rand() % 220;
 	new_team->representation = player;
 	if (!sdl_map->list_team)
 		sdl_map->list_team = new_team;

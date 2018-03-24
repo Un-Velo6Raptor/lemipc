@@ -21,6 +21,32 @@ t_vector get_block_tools(t_window *sdl_data)
 	return (result);
 }
 
+static void tool_used(t_window *sdl_data, SDL_Rect *texture_dest)
+{
+	SDL_SetRenderDrawColor(sdl_data->renderer, 255, 255, 255, 100);
+	SDL_SetRenderDrawBlendMode(sdl_data->renderer, SDL_BLENDMODE_BLEND);
+	SDL_RenderFillRect(sdl_data->renderer, texture_dest);
+}
+
+static int print_team_wheel(t_window *sdl_data, SDL_Rect *texture_dest)
+{
+	SDL_Color white = {255, 255, 255, 255};
+	char tmp[3];
+
+	sprintf(tmp, "%d", sdl_data->team_wheel);
+	texture_dest->x = WINDOW_WIDTH - 50;
+	texture_dest->y += 40;
+	texture_dest->w = 30;
+	texture_dest->h = 30;
+	SDL_Surface *surfaceMessage = TTF_RenderText_Solid(sdl_data->fonts_team,
+		tmp, white);
+	SDL_Texture *Message = SDL_CreateTextureFromSurface(sdl_data->renderer,
+		surfaceMessage);
+	SDL_RenderCopy(sdl_data->renderer, Message, NULL, texture_dest);
+
+	return (0);
+}
+
 int draw_tools(t_window *sdl_data)
 {
 	SDL_Rect texture_dest;
@@ -39,12 +65,9 @@ int draw_tools(t_window *sdl_data)
 		SDL_RenderDrawLine(sdl_data->renderer, texture_dest.x - 1,
 			texture_dest.y, texture_dest.x - 1,
 			texture_dest.y + texture_dest.h);
-		if (sdl_data->tools_used == idx) {
-			SDL_SetRenderDrawColor(sdl_data->renderer, 255, 255, 255, 100);
-			SDL_SetRenderDrawBlendMode(sdl_data->renderer, SDL_BLENDMODE_BLEND);
-			SDL_RenderFillRect(sdl_data->renderer, &texture_dest);
-		}
+		if (sdl_data->tools_used == idx)
+			tool_used(sdl_data, &texture_dest);
 		texture_dest.x += block.x + 1;
 	}
-	return (0);
+	return (print_team_wheel(sdl_data, &texture_dest));
 }

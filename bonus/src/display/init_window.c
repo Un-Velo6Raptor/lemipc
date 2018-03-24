@@ -23,6 +23,8 @@ static const char *const PATH_TEXTURE[7] = {"extra/texture_wall.PNG",
 static const char *const PATH_PATTERN[4] = {"extra/pattern_wall.png",
 	"extra/pattern_leaf.png", "extra/pattern_water.jpg", 0};
 
+static const char *const PATH_FONTS = "extra/fonts_team.ttf";
+
 static int create_pattern_sdl(t_window *sdl_data)
 {
 	unsigned int idx = 0;
@@ -66,6 +68,7 @@ static int create_surface_sdl(t_window *sdl_data)
 int create_window(t_window *sdl_data, char *window_name)
 {
 	SDL_Init(SDL_INIT_VIDEO);
+	TTF_Init();
 
 	sdl_data->window = SDL_CreateWindow(window_name,
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH,
@@ -73,6 +76,8 @@ int create_window(t_window *sdl_data, char *window_name)
 	sdl_data->renderer = SDL_CreateRenderer(sdl_data->window, -1,
 		SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	sdl_data->list_team = NULL;
+	sdl_data->team_wheel = 0;
+	sdl_data->fonts_team = TTF_OpenFont(PATH_FONTS, 10);
 	if (!sdl_data->window || !sdl_data->renderer)
 		return (84);
 	return (create_surface_sdl(sdl_data));

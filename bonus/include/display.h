@@ -11,6 +11,7 @@
 # include <stdio.h> // TODO: deleted it
 # include <SDL2/SDL.h>
 # include <SDL2/SDL_image.h>
+# include <SDL2/SDL_ttf.h>
 # include "transmission.h"
 # include "config.h"
 
@@ -35,10 +36,16 @@ typedef struct s_window {
 
 	SDL_Texture *image[7];
 	SDL_Texture *pattern[7];
+	TTF_Font *fonts_team;
+
+	unsigned int team_wheel;
 	int tools_used;
 
 	t_team *list_team;
 } t_window;
+
+int graphical_display(t_data *data);
+int check_arg_and_launch_display(int argc, char **argv);
 
 void destroy_sdl_tools(t_window *sdl_data);
 int create_window(t_window *sdl_data, char *window_name);

@@ -20,6 +20,7 @@ static int loop_game(t_data *data, struct sembuf *sops, unsigned int index)
 	static unsigned int i = 0;
 	int status;
 	char **tmp;
+	static short end = 0;
 
 	// ANNONCE de l'utilisation de la map
 	if (data->pos == FIRST)
@@ -30,8 +31,11 @@ static int loop_game(t_data *data, struct sembuf *sops, unsigned int index)
 	if (!tmp)
 		return end_game(data, tmp, sops, 84);
 	if (i > 1 && ended(tmp)) {
-		tmp[data->player->pos->y][data->player->pos->x] = ' ';
-		return end_game(data, tmp, sops, 0);
+		if (end == 5) {
+			tmp[data->player->pos->y][data->player->pos->x] = ' ';
+			return end_game(data, tmp, sops, 0);
+		}
+		end++;
 	}
 	status = ia(data->player, tmp);
 	if (status == -1)

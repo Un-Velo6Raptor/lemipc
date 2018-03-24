@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "transmission.h"
+#include "display.h"
 
 static void print_help(void)
 {
@@ -36,7 +37,7 @@ int main(int argc, char **argv)
 
 	if (need_help(argc, argv))
 		return (ret);
-	if (check_arg_and_launch(argc, argv))
+	if (check_arg_and_launch_display(argc, argv))
 		ret = 84;
 	return (ret);
 }

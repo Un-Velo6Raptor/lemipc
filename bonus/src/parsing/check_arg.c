@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "transmission.h"
+#include "display.h"
 
 static int initialize_ipc(t_data *data, key_t key)
 {
@@ -28,6 +29,7 @@ static int take_path(t_data *data, char *str)
 		fprintf(stderr, "Error: PATH must be valid\n");
 		ret = 84;
 	} else {
+		data->path = strdup(str);
 		key = ftok(str, 0);
 		if (key != -1) {
 			ret = initialize_ipc(data, key);
@@ -39,7 +41,7 @@ static int take_path(t_data *data, char *str)
 	return (ret ? 84 : 0);
 }
 
-int check_arg_and_launch(int argc, char **argv)
+int check_arg_and_launch_display(int argc, char **argv)
 {
 	t_data data;
 
@@ -48,5 +50,5 @@ int check_arg_and_launch(int argc, char **argv)
 		return 84;
 	} else if (take_path(&data, argv[1]))
 		return 84;
-	return (game(&data));
+	return (graphical_display(&data));
 }

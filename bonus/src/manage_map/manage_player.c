@@ -5,13 +5,22 @@
 ** Created by martin.januario@epitech.eu,
 */
 
+#include <unistd.h>
 #include "display.h"
 #include "config.h"
 
 int tools_manage_player(t_data *data, t_window *sdl_data, SDL_Event *ev)
 {
-	(void)data;
-	(void)sdl_data;
+	pid_t pid = fork();
+	char tmp[3] = "\0";
+
+	sprintf(tmp, "%d", sdl_data->team_wheel);
+	char *arg[4] = {"lemipc", data->path, tmp, 0};
+
 	(void)ev;
+	if (pid == 0) {
+		check_arg_and_launch(3, arg);
+		exit(0);
+	}
 	return (0);
 }

@@ -11,7 +11,13 @@ SRC		=	../src/init/initialize_memory_shared.c		\
 			../src/manage/manage_memory_shared.c		\
 			../src/manage/manage_msg_queue.c		\
 			../src/manage/manage_semaphore.c		\
+			../src/parsing/check_arg.c			\
 			../src/config.c					\
+			../src/ia/end.c					\
+			../src/ia/game.c				\
+			../src/ia/ia.c					\
+			../src/ia/placement.c				\
+			../src/ia/target.c				\
 			../src/basics.c
 
 SRC_DISPLAY	=	src/display/game.c				\
@@ -41,9 +47,9 @@ SDL_LDFLAGS	:=	$(shell sdl2-config --libs)
 
 CFLAGS		=	-W -Wall -Wextra $(SDL_CFLAGS)			\
 			-I include/					\
-			-I ../include/
+			-I ../include/ -I ../include/ia/
 
-LDFLAGS		=	-lpthread -lrt -lSDL2_image $(SDL_LDFLAGS)
+LDFLAGS		=	-lpthread -lrt -lSDL2_image -lSDL2_ttf $(SDL_LDFLAGS)
 
 NAME		=	ipc_map
 
@@ -67,5 +73,6 @@ debug:			re
 install:
 			sudo apt-get install libsdl2-dev
 			sudo apt-get install libsdl2-image-dev
+			sudo apt-get install libsdl2-tff-dev
 
 .PHONY:			all clean fclean re debug install

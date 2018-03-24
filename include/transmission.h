@@ -34,6 +34,7 @@ typedef struct s_data {
 	int msgq_id;
 
 	t_player_info *player;
+	char *path;
 
 	enum pos_client pos;
 } t_data;

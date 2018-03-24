@@ -11,6 +11,7 @@
 #include <sys/sem.h>
 #include "transmission.h"
 #include "display.h"
+#include "config.h"
 
 static int draw_interface(t_data *data, t_window *sdl_data)
 {
@@ -39,11 +40,31 @@ static int draw_interface(t_data *data, t_window *sdl_data)
 	return (0);
 }
 
+static void update_team_adder(t_window *sdl_data, int scroll)
+{
+	if (scroll > 0 && sdl_data->team_wheel < strlen(TEAMS) - 1)
+		sdl_data->team_wheel++;
+	else if (scroll < 0 && sdl_data->team_wheel > 0)
+		sdl_data->team_wheel--;
+}
+
+static int manage_event(t_data *data, t_window *sdl_data, SDL_Event *event)
+{
+	static bool check = false;
+
+	if (event->type == SDL_MOUSEBUTTONDOWN)
+		check = true;
+	else if (event->type == SDL_MOUSEBUTTONUP)
+		check = false;
+	if (event->type == SDL_MOUSEWHEEL)
+		update_team_adder(sdl_data, event->wheel.y);
+	return ((check) ? check_mouse_click(data, sdl_data, event) : 0);
+}
+
 static int loop_game(t_data *data, t_window *sdl_data)
 {
 	bool running = true;
 	SDL_Event event;
-	bool check = false;
 
 	while (running) {
 		SDL_SetRenderDrawColor(sdl_data->renderer, 255, 255, 255, 255);
@@ -51,14 +72,10 @@ static int loop_game(t_data *data, t_window *sdl_data)
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_QUIT ||
 				(event.type == SDL_KEYDOWN &&
-					event.key.keysym.sym == SDLK_ESCAPE)) {
+					event.key.keysym.sym == SDLK_ESCAPE))
 				running = false;
-			} else if (event.type == SDL_MOUSEBUTTONDOWN)
-				check = true;
-			else if (event.type == SDL_MOUSEBUTTONUP)
-				check = false;
-			if (check)
-				check_mouse_click(data, sdl_data, &event);
+			else
+				manage_event(data, sdl_data, &event);
 		}
 		if (draw_interface(data, sdl_data) == 84)
 			running = false;
@@ -68,7 +85,7 @@ static int loop_game(t_data *data, t_window *sdl_data)
 	return (0);
 }
 
-int game(t_data *data)
+int graphical_display(t_data *data)
 {
 	t_window sdl_data;
 	struct sembuf sops;

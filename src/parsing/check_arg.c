@@ -37,6 +37,7 @@ static int take_path(t_data *data, char *str)
 	int ret = 0;
 	key_t key;
 
+	data->path = NULL;
 	if (!strlen(str)) {
 		fprintf(stderr, "Error: PATH must be valid\n");
 		ret = 84;
