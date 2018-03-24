@@ -8,7 +8,7 @@
 #include "config.h"
 #include "display.h"
 
-static t_vector get_block_size(void)
+t_vector get_block_size(void)
 {
 	t_vector result;
 
@@ -49,7 +49,6 @@ static int check_new_color(t_window *sdl_map, char player)
 	t_team *new_team = malloc(sizeof(t_team) * 1);
 	if (!new_team)
 		return (84);
-	printf("-- player [%c]\n", player);
 	new_team->next = NULL;
 	new_team->r = rand() % 255;
 	new_team->g = rand() % 255;

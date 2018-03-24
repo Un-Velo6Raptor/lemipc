@@ -50,6 +50,7 @@ int draw_tools(t_window *sdl_data);
 int check_mouse_click(t_data *data, t_window *sdl_data, SDL_Event *ev);
 t_vector get_block_tools(t_window *sdl_data);
 
+t_vector get_block_size(void);
 int tools_manage_wall(t_data *data, t_window *sdl_data, SDL_Event *ev);
 int tools_manage_leaf(t_data *data, t_window *sdl_data, SDL_Event *ev);
 int tools_manage_water(t_data *data, t_window *sdl_data, SDL_Event *ev);

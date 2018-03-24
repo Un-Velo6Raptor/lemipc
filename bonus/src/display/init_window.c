@@ -15,10 +15,31 @@ const int MSG_WIDTH = 500;
 
 const int TOOLS_HEIGHT = 200;
 
-static const char *PATH_TEXTURE[7] = {"extra/texture_wall.PNG",
+static const char *const PATH_TEXTURE[7] = {"extra/texture_wall.PNG",
 	"extra/texture_leaf.PNG", "extra/texture_water.PNG",
 	"extra/texture_rubber.PNG", "extra/texture_reset.PNG",
 	"extra/texture_player.PNG", 0};
+
+static const char *const PATH_PATTERN[4] = {"extra/pattern_wall.png",
+	"extra/pattern_leaf.png", "extra/pattern_water.jpg", 0};
+
+static int create_pattern_sdl(t_window *sdl_data)
+{
+	unsigned int idx = 0;
+	SDL_Surface *tmp;
+	int ret = 0;
+
+	for (; PATH_PATTERN[idx]; ++idx) {
+		tmp = IMG_Load(PATH_PATTERN[idx]);
+		sdl_data->pattern[idx] = SDL_CreateTextureFromSurface(
+			sdl_data->renderer, tmp);
+		if (!sdl_data->pattern[idx])
+			return (84);
+		SDL_FreeSurface(tmp);
+	}
+	sdl_data->pattern[idx] = NULL;
+	return (ret);
+}
 
 static int create_surface_sdl(t_window *sdl_data)
 {
@@ -37,6 +58,8 @@ static int create_surface_sdl(t_window *sdl_data)
 		SDL_FreeSurface(tmp);
 	}
 	sdl_data->image[idx] = NULL;
+	if (!ret)
+		ret = create_pattern_sdl(sdl_data);
 	return (ret);
 }
 
@@ -50,5 +73,7 @@ int create_window(t_window *sdl_data, char *window_name)
 	sdl_data->renderer = SDL_CreateRenderer(sdl_data->window, -1,
 		SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	sdl_data->list_team = NULL;
+	if (!sdl_data->window || !sdl_data->renderer)
+		return (84);
 	return (create_surface_sdl(sdl_data));
 }

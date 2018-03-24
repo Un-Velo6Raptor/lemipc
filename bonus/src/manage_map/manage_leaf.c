@@ -8,10 +8,40 @@
 #include "display.h"
 #include "config.h"
 
+static int put_a_tree_here(char **map, t_vector *index)
+{
+	int ret = 84;
+
+	if (map[index->y][index->x] == ' ') {
+		map[index->y][index->x] = -4;
+		if (index->x > 0 && map[index->y][index->x - 1] == ' ')
+			map[index->y][index->x - 1] = -4;
+		if (map[index->y][index->x + 1] == ' ')
+			map[index->y][index->x + 1] = -4;
+		if (map[index->y + 1] && map[index->y + 1][index->x] == ' ')
+			map[index->y + 1][index->x] = -4;
+		if (index->y > 0 && map[index->y - 1][index->x] == ' ')
+			map[index->y - 1][index->x] = -4;
+		ret = 0;
+	}
+
+	return (ret);
+}
+
 int tools_manage_leaf(t_data *data, t_window *sdl_data, SDL_Event *ev)
 {
-	(void)data;
+	char **map = get_the_map(data);
+	t_vector size = get_block_size();
+	t_vector index = {-1, -1};
+
 	(void)sdl_data;
-	(void)ev;
+	if (!map) {
+		return (84);
+	}
+	index.x = (ev->button.x - MSG_WIDTH) / size.x;
+	index.y = ev->button.y / size.y;
+	if (!put_a_tree_here(map, &index))
+		set_new_map(data, map);
+	free_tab(map);
 	return (0);
 }
