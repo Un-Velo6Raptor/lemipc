@@ -36,6 +36,7 @@ typedef struct s_data {
 	t_player_info *player;
 	char *path;
 
+	char **map;
 	enum pos_client pos;
 } t_data;
 
