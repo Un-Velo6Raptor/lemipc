@@ -11,9 +11,11 @@
 
 int tools_manage_player(t_data *data, t_window *sdl_data, SDL_Event *ev)
 {
-	pid_t pid = fork();
 	char tmp[3] = "\0";
 
+	if (sdl_data->tools_used != -1)
+		return (0);
+	pid_t pid = fork();
 	sprintf(tmp, "%d", sdl_data->team_wheel);
 	char *arg[4] = {"lemipc", data->path, tmp, 0};
 
