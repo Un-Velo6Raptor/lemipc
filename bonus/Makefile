@@ -73,6 +73,6 @@ debug:			re
 install:
 			sudo apt-get install libsdl2-dev
 			sudo apt-get install libsdl2-image-dev
-			sudo apt-get install libsdl2-tff-dev
+			sudo apt-get install libsdl2-ttf-dev
 
 .PHONY:			all clean fclean re debug install
