@@ -17,7 +17,7 @@ char const * const TEAMS =
 ** Size of the game map
 ** Allowed size: from 1;1 to 100;100
 */
-const t_vector MAP_SIZE = {100, 100};
+const t_vector MAP_SIZE = {30, 30};
 
 /*
 ** Max size of the msg send by process
