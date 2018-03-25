@@ -15,7 +15,6 @@
 
 static int draw_interface(t_data *data, t_window *sdl_data)
 {
-	char **map = NULL;
 	static int last_tools = -1;
 	struct sembuf sops;
 
@@ -30,12 +29,8 @@ static int draw_interface(t_data *data, t_window *sdl_data)
 		semop(data->sem_id, &sops, 1);
 	}
 	SDL_SetRenderDrawColor(sdl_data->renderer, 255, 255, 255, 255);
-	map = get_the_map(data);
-	if (map) {
-		draw_map_sdl(sdl_data, map);
-	}
+	draw_map_sdl(sdl_data, data->map);
 	draw_tools(sdl_data);
-	free_tab((void **)map);
 	last_tools = sdl_data->tools_used;
 	return (0);
 }
@@ -93,6 +88,7 @@ int graphical_display(t_data *data)
 	struct sembuf sops;
 	int ret = 0;
 
+	data->map = get_the_map(data);
 	srandom(time(NULL));
 	if (create_window(&sdl_data, "Lemipc graphical bonus"))
 		return (84);

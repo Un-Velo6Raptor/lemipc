@@ -35,18 +35,12 @@ static int water_bucket_fall(char **map, t_vector *index)
 
 int tools_manage_water(t_data *data, t_window *sdl_data, SDL_Event *ev)
 {
-	char **map = get_the_map(data);
 	t_vector size = get_block_size();
 	t_vector index = {-1, -1};
 
 	(void)sdl_data;
-	if (!map) {
-		return (84);
-	}
 	index.x = (ev->button.x - MSG_WIDTH) / size.x;
 	index.y = ev->button.y / size.y;
-	if (!water_bucket_fall(map, &index))
-		set_new_map(data, map);
-	free_tab((void **)map);
+	water_bucket_fall(data->map, &index);
 	return (0);
 }

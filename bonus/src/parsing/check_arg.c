@@ -48,7 +48,15 @@ int check_arg_and_launch_display(int argc, char **argv)
 	if (argc != 2) {
 		fprintf(stderr, "Error: We need 2 arguments, look --help\n");
 		return 84;
-	} else if (take_path(&data, argv[1]))
+	} else {
+		data.player = malloc(sizeof(t_player_info));
+		if (!data.player)
+			return 84;
+		data.player->pos = malloc(sizeof(t_vector));
+		if (!data.player->pos)
+			return 84;
+	}
+	if (take_path(&data, argv[1]))
 		return 84;
 	return (graphical_display(&data));
 }

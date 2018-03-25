@@ -14,8 +14,13 @@ static int manage_features(t_data *data, t_window *sdl_data, SDL_Event *ev)
 	int (*tools_manage[])(t_data *, t_window *, SDL_Event *) = {
 		tools_manage_wall, tools_manage_leaf, tools_manage_water,
 		tools_manage_rubber, tools_manage_reset};
+	t_vector size_block_map = get_block_size();
 
 	if (sdl_data->tools_used == -1 || sdl_data->tools_used >= 7)
+		return (0);
+	if (sdl_data->tools_used < 4 &&
+		ev->button.x >= MAP_WIDTH(size_block_map.x) &&
+		ev->button.y >= MAP_HEIGHT(size_block_map.y))
 		return (0);
 	return (tools_manage[sdl_data->tools_used](data, sdl_data, ev));
 }

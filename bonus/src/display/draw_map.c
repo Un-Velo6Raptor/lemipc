@@ -25,15 +25,31 @@ t_vector get_block_size(void)
 static void draw_grid(t_window *sdl_map, t_vector *block_size)
 {
 	SDL_SetRenderDrawColor(sdl_map->renderer, 0, 0, 0, 255);
-	for (int idx_height = 0; idx_height <=
-		WINDOW_HEIGHT - TOOLS_HEIGHT; idx_height += block_size->y) {
+	int idx_height = 0;
+	int idx_width = MSG_WIDTH;
+
+	for (; idx_height + block_size->y <=
+		WINDOW_HEIGHT - TOOLS_HEIGHT; idx_height += block_size->y)
 		SDL_RenderDrawLine(sdl_map->renderer, MSG_WIDTH, idx_height,
 			WINDOW_WIDTH, idx_height);
-	}
-	for (int idx_width = MSG_WIDTH;
-		idx_width <= WINDOW_WIDTH; idx_width += block_size->x) {
+	for (; idx_width + block_size->x <= WINDOW_WIDTH; idx_width += block_size->x)
 		SDL_RenderDrawLine(sdl_map->renderer, idx_width, 0, idx_width,
 			WINDOW_HEIGHT - TOOLS_HEIGHT);
+	SDL_Rect tmp;
+	SDL_SetRenderDrawColor(sdl_map->renderer, 0, 0, 0, 255);
+	if (idx_height < WINDOW_HEIGHT - TOOLS_HEIGHT) {
+		tmp.x = MSG_WIDTH;
+		tmp.y = idx_height;
+		tmp.w = WINDOW_WIDTH - MSG_WIDTH;
+		tmp.h = idx_height;
+		SDL_RenderFillRect(sdl_map->renderer, &tmp);
+	}
+	if (idx_width < WINDOW_WIDTH) {
+		tmp.x = idx_width;
+		tmp.y = 0;
+		tmp.w = idx_width;
+		tmp.h = WINDOW_HEIGHT - TOOLS_HEIGHT;
+		SDL_RenderFillRect(sdl_map->renderer, &tmp);
 	}
 }
 
