@@ -24,6 +24,7 @@ int ia(t_player_info *player, char **map)
 			return -1;
 		distance_map = get_distance_map(player, map);
 	}
+	map[player->pos->y][player->pos->x] = ' ';
 	if (is_dead(player, map)) {
 		free_tab((void **)distance_map);
 		return 1;
