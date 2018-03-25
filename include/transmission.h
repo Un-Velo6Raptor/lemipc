@@ -16,7 +16,7 @@
 
 typedef struct s_msg_data {
 	long mtype;
-	char msg[256];
+	char mtext[256];
 } t_msg_data;
 
 typedef struct s_player_info {

@@ -19,8 +19,8 @@ int send_message(t_data *data, const char *str, long mtype)
 	bzero(&tmp, sizeof(t_msg_data));
 	// Te permet de savoir lorsque tu reçois un message si il a été transmis par le capitaine. Attention, si le capitaine meurt. Son message reste en temps que capitaine
 	tmp.mtype = mtype;
-	strncpy(tmp.msg, str, MSG_SIZE);
-	msgsnd(data->msgq_id, &tmp, sizeof(t_msg_data), 0);
+	strncpy(tmp.mtext, str, MSG_SIZE);
+	msgsnd(data->msgq_id, &tmp, MSG_SIZE, IPC_NOWAIT);
 	return (0);
 }
 
@@ -32,8 +32,9 @@ t_msg_data *read_next_message(t_data *data, long mtype)
 		fprintf(stderr, "Error: Malloc failed\n");
 		return (NULL);
 	}
+	msg->mtype = mtype;
 	// Attention, si pas de message ou pas de message avec ce mtype. Il va wait un message
-	msgrcv(data->msgq_id, msg, sizeof(t_msg_data), mtype, 0);
+	msgrcv(data->msgq_id, msg, MSG_SIZE, mtype, 0);
 	return (msg);
 }
 
@@ -49,12 +50,12 @@ t_msg_data *get_specific_message(t_data *data, long mtype, char *pattern,
 
 	if (!tmp)
 		return (NULL);
-	else if (!strncasecmp(tmp->msg, pattern, strlen(pattern)))
+	else if (!strncasecmp(tmp->mtext, pattern, strlen(pattern)))
 		return (tmp);
 	msg_return.player = malloc(sizeof(t_player_info));
 	if (!msg_return.player)
 		return NULL;
-	send_message(&msg_return, tmp->msg, mtype);
+	send_message(&msg_return, tmp->mtext, mtype);
 	free(msg_return.player);
 	free(tmp);
 	return (get_specific_message(data, mtype, pattern, opt));

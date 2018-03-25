@@ -10,13 +10,15 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/sem.h>
+#include <strings.h>
+#include <string.h>
 #include "config.h"
 #include "transmission.h"
 #include "ia.h"
 #include "end.h"
 #include "placement.h"
 
-static int loop_game(t_data *data, struct sembuf *sops, unsigned int index)
+static int loop_game(t_data *data, struct sembuf *sops)
 {
 	static unsigned int i = 0;
 	int status;
@@ -28,6 +30,7 @@ static int loop_game(t_data *data, struct sembuf *sops, unsigned int index)
 	semop(data->sem_id, sops, 1);
 	if (i > 1 && ended(data->map)) {
 		if (end == 5) {
+			send_message(data, "end", strlen(TEAMS) + 2);
 			data->map[data->player->pos->y][data->player->pos->x] = ' ';
 			return end_game(data, sops, 0);
 
@@ -40,6 +43,7 @@ static int loop_game(t_data *data, struct sembuf *sops, unsigned int index)
 		return end_game(data, sops, 84);
 	if (status == 1) {
 		printf("You die!\n");
+		send_message(data, "die", TEAMS - index(TEAMS, data->player->team_number) + 1);
 		return end_game(data, sops, 1);
 	}
 	placement(data->map, data->player);
@@ -49,9 +53,12 @@ static int loop_game(t_data *data, struct sembuf *sops, unsigned int index)
 		return end_game(data, sops, 0);
 	if (end_game(data, sops, 0) == 84)
 		return 84;
+	char *str = malloc(12);
+	sprintf(str, "%c: %i;%i", data->player->team_number, data->player->pos->x, data->player->pos->y);
+	send_message(data, str, TEAMS - index(TEAMS, data->player->team_number) + 1);
 	usleep((i == 0) ? 1000000 : 300000);
 	i++;
-	return (loop_game(data, sops, index + 1));
+	return (loop_game(data, sops));
 }
 
 // This function is the first call, place your player in the map here
@@ -66,14 +73,18 @@ int game(t_data *data)
 	data->map = get_the_map(data);
 	if (!data->map)
 		return 84;
-	ret = loop_game(data, &sops, 0);
-	do {
-		if (data->pos == FIRST)
+	ret = loop_game(data, &sops);
+	if (data->pos != FIRST)
+		read_next_message(data, strlen(TEAMS) + 2);
+	else {
+		while (ended(data->map) == false) {
+			printf("\033[3J\033[H\033[2J");
 			display_tab(data->map);
-		sleep(1);
-	} while (ended(data->map) == false);
-	if (data->pos == FIRST)
+			sleep(1);
+		}
+		sleep(10);
 		destroy(data);
+	}
 	free(data->map);
 	return (ret);
 }
