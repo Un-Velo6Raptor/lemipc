@@ -69,7 +69,6 @@ int game(t_data *data)
 	data->map = get_the_map(data);
 	if (!data->map)
 		return 84;
-	display_tab(data->map);
 	ret = loop_game(data, &sops, 0);
 	do {
 		if (data->pos == FIRST)
@@ -81,5 +80,6 @@ int game(t_data *data)
 		destroy_message_queue(data);
 		destroy_semaphore(data);
 	}
+	free(data->map);
 	return (ret);
 }

@@ -40,8 +40,7 @@ int initialize_memory_shared(t_data *data, key_t key, int opt)
 	data->player->pos->x = -1;
 	data->player->pos->y = -1;
 	data->shm_id = shmget(key,
-		(unsigned int)(sizeof(char [MAP_SIZE.y + 1][MAP_SIZE.x + 1])),
-		SHM_R | SHM_W);
+		(unsigned int)((MAP_SIZE.x + 1) * MAP_SIZE.y), SHM_R | SHM_W);
 	if (data->shm_id == -1 && opt) {
 		ret = create_memory_shared(data, key);
 	} else if (data->shm_id == -1) {
