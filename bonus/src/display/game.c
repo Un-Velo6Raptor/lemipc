@@ -13,19 +13,19 @@
 #include "display.h"
 #include "config.h"
 
-static int draw_interface(t_data *data, t_window *sdl_data, int last_tools, int *check)
+static int draw_interface(t_data *data, t_window *sdl_data, int last_tools,
+	int *check
+)
 {
-	struct sembuf sops;
+	struct sembuf sops = {0, 0, 0};
 	SDL_Rect loading_position = {MSG_WIDTH, 0, WINDOW_WIDTH - MSG_WIDTH,
 		WINDOW_HEIGHT - TOOLS_HEIGHT};
 
-	sops.sem_num = 0;
-	sops.sem_flg = 0;
+	SDL_SetRenderDrawColor(sdl_data->renderer, 255, 255, 255, 255);
+	draw_map_sdl(sdl_data, data->map);
+	draw_tools(sdl_data);
 	if (sdl_data->tools_used != -1 && last_tools == -1) {
 		*check = 30;
-		SDL_SetRenderDrawColor(sdl_data->renderer, 255, 255, 255, 255);
-		draw_map_sdl(sdl_data, data->map);
-		draw_tools(sdl_data);
 		SDL_RenderCopy(sdl_data->renderer, sdl_data->loading, NULL,
 			&loading_position);
 		SDL_RenderPresent(sdl_data->renderer);
@@ -36,9 +36,6 @@ static int draw_interface(t_data *data, t_window *sdl_data, int last_tools, int 
 		sops.sem_op = 1;
 		semop(data->sem_id, &sops, 1);
 	}
-	SDL_SetRenderDrawColor(sdl_data->renderer, 255, 255, 255, 255);
-	draw_map_sdl(sdl_data, data->map);
-	draw_tools(sdl_data);
 	return (0);
 }
 
@@ -65,33 +62,29 @@ static int manage_event(t_data *data, t_window *sdl_data, SDL_Event *event)
 	return ((check) ? check_mouse_click(data, sdl_data, event) : 0);
 }
 
-static int loop_game(t_data *data, t_window *sdl_data)
+static void loop_game(t_data *data, t_window *sdl_data)
 {
 	static int last_tools = -1;
 	bool running = true;
-	SDL_Event event;
+	SDL_Event ev;
 	int check = 0;
 
 	while (running) {
 		SDL_SetRenderDrawColor(sdl_data->renderer, 255, 255, 255, 255);
 		SDL_RenderClear(sdl_data->renderer);
-		while (SDL_PollEvent(&event)) {
-			if (event.type == SDL_QUIT ||
-				(event.type == SDL_KEYDOWN &&
-					event.key.keysym.sym == SDLK_ESCAPE))
+		while (SDL_PollEvent(&ev)) {
+			if (ev.type == SDL_QUIT || (ev.type == SDL_KEYDOWN &&
+				ev.key.keysym.sym == SDLK_ESCAPE))
 				running = false;
-			else if (!check)
-				manage_event(data, sdl_data, &event);
+			else if (!check || ev.button.type == SDL_MOUSEBUTTONUP)
+				manage_event(data, sdl_data, &ev);
 		}
-		if (draw_interface(data, sdl_data, last_tools, &check) == 84)
-			running = false;
+		draw_interface(data, sdl_data, last_tools, &check);
 		last_tools = sdl_data->tools_used;
 		SDL_RenderPresent(sdl_data->renderer);
 		if (check)
 			check--;
 	}
-	destroy_sdl_tools(sdl_data);
-	return (0);
 }
 
 int graphical_display(t_data *data)
@@ -106,7 +99,8 @@ int graphical_display(t_data *data)
 	srandom(time(NULL));
 	if (create_window(&sdl_data, "Lemipc graphical bonus"))
 		return (84);
-	ret = loop_game(data, &sdl_data);
+	loop_game(data, &sdl_data);
+	destroy_sdl_tools(&sdl_data);
 	if (sdl_data.tools_used != -1) {
 		sops.sem_num = 0;
 		sops.sem_flg = 0;
