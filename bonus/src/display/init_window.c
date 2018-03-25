@@ -25,6 +25,8 @@ static const char *const PATH_PATTERN[4] = {"extra/pattern_wall.png",
 
 static const char *const PATH_FONTS = "extra/fonts_team.ttf";
 
+static const char *const PATH_LOADING = "extra/texture_loading.jpg";
+
 static int create_pattern_sdl(t_window *sdl_data)
 {
 	unsigned int idx = 0;
@@ -40,6 +42,11 @@ static int create_pattern_sdl(t_window *sdl_data)
 		SDL_FreeSurface(tmp);
 	}
 	sdl_data->pattern[idx] = NULL;
+	tmp = IMG_Load(PATH_LOADING);
+	sdl_data->loading = SDL_CreateTextureFromSurface(
+		sdl_data->renderer, tmp);
+	if (!sdl_data->loading)
+		ret = 84;
 	return (ret);
 }
 

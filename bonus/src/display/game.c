@@ -13,14 +13,22 @@
 #include "display.h"
 #include "config.h"
 
-static int draw_interface(t_data *data, t_window *sdl_data)
+static int draw_interface(t_data *data, t_window *sdl_data, int last_tools, int *check)
 {
-	static int last_tools = -1;
 	struct sembuf sops;
+	SDL_Rect loading_position = {MSG_WIDTH, 0, WINDOW_WIDTH - MSG_WIDTH,
+		WINDOW_HEIGHT - TOOLS_HEIGHT};
 
 	sops.sem_num = 0;
 	sops.sem_flg = 0;
 	if (sdl_data->tools_used != -1 && last_tools == -1) {
+		*check = 30;
+		SDL_SetRenderDrawColor(sdl_data->renderer, 255, 255, 255, 255);
+		draw_map_sdl(sdl_data, data->map);
+		draw_tools(sdl_data);
+		SDL_RenderCopy(sdl_data->renderer, sdl_data->loading, NULL,
+			&loading_position);
+		SDL_RenderPresent(sdl_data->renderer);
 		sops.sem_op = -1;
 		semop(data->sem_id, &sops, 1);
 		usleep(300000);
@@ -31,7 +39,6 @@ static int draw_interface(t_data *data, t_window *sdl_data)
 	SDL_SetRenderDrawColor(sdl_data->renderer, 255, 255, 255, 255);
 	draw_map_sdl(sdl_data, data->map);
 	draw_tools(sdl_data);
-	last_tools = sdl_data->tools_used;
 	return (0);
 }
 
@@ -60,8 +67,10 @@ static int manage_event(t_data *data, t_window *sdl_data, SDL_Event *event)
 
 static int loop_game(t_data *data, t_window *sdl_data)
 {
+	static int last_tools = -1;
 	bool running = true;
 	SDL_Event event;
+	int check = 0;
 
 	while (running) {
 		SDL_SetRenderDrawColor(sdl_data->renderer, 255, 255, 255, 255);
@@ -71,12 +80,15 @@ static int loop_game(t_data *data, t_window *sdl_data)
 				(event.type == SDL_KEYDOWN &&
 					event.key.keysym.sym == SDLK_ESCAPE))
 				running = false;
-			else
+			else if (!check)
 				manage_event(data, sdl_data, &event);
 		}
-		if (draw_interface(data, sdl_data) == 84)
+		if (draw_interface(data, sdl_data, last_tools, &check) == 84)
 			running = false;
+		last_tools = sdl_data->tools_used;
 		SDL_RenderPresent(sdl_data->renderer);
+		if (check)
+			check--;
 	}
 	destroy_sdl_tools(sdl_data);
 	return (0);

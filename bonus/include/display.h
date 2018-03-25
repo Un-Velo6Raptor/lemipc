@@ -38,6 +38,7 @@ typedef struct s_window {
 
 	SDL_Texture *image[7];
 	SDL_Texture *pattern[7];
+	SDL_Texture *loading;
 	TTF_Font *fonts_team;
 
 	unsigned int team_wheel;
