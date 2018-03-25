@@ -18,7 +18,8 @@ SRC		=	../src/init/initialize_memory_shared.c		\
 			../src/ia/ia.c					\
 			../src/ia/placement.c				\
 			../src/ia/target.c				\
-			../src/basics.c
+			../src/basics.c					\
+			../src/ia/pathfinding.c
 
 SRC_DISPLAY	=	src/display/game.c				\
 			src/main.c					\
