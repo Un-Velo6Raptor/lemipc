@@ -15,9 +15,7 @@
 #include "tools.h"
 
 typedef struct s_msg_data {
-	unsigned char team_number;
 	long mtype;
-	bool is_captain;
 	char msg[256];
 } t_msg_data;
 
@@ -64,7 +62,7 @@ void destroy_memory_shared(t_data *data);
 char **get_the_map(t_data *data);
 
 // Manage message queue
-int send_message(t_data *data, char *str, long mtype);
+int send_message(t_data *data, const char *str, long mtype);
 t_msg_data *read_next_message(t_data *data, long mtype);
 t_msg_data *get_next_message_team(t_data *data, long mtpye);
 t_msg_data *get_specific_message(t_data *data, long mtype, char *pattern,

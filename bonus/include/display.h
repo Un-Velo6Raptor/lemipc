@@ -16,8 +16,11 @@
 # include "config.h"
 
 extern const int WINDOW_WIDTH;
+
 extern const int WINDOW_HEIGHT;
+
 extern const int MSG_WIDTH;
+
 extern const int TOOLS_HEIGHT;
 
 #ifndef                MAP_WIDTH
@@ -64,6 +67,8 @@ int draw_map_sdl(t_window *sdl_map, char **map);
 void draw_player(t_window *sdl_map, t_vector *block_size, char **map);
 
 int draw_tools(t_window *sdl_data);
+
+int draw_history(t_window *sdl_data, t_data *data);
 
 int check_mouse_click(t_data *data, t_window *sdl_data, SDL_Event *ev);
 

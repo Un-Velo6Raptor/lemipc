@@ -18,6 +18,9 @@ int tools_manage_wall(t_data *data, t_window *sdl_data, SDL_Event *ev)
 	(void)sdl_data;
 	index.x = (ev->button.x - MSG_WIDTH) / size.x;
 	index.y = ev->button.y / size.y;
+	if (index.x < 0 || index.x >= MAP_SIZE.x || index.y < 0 ||
+		index.y >= MAP_SIZE.y)
+		return (0);
 	if (data->map[index.y][index.x] == ' ') {
 		data->map[index.y][index.x] = WALL_CHAR;
 	}

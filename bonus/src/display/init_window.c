@@ -7,13 +7,13 @@
 
 #include "display.h"
 
-const int WINDOW_WIDTH = 1600;
+const int WINDOW_WIDTH = 1200;
 
-const int WINDOW_HEIGHT = 1000;
+const int WINDOW_HEIGHT = 800;
 
-const int MSG_WIDTH = 500;
+const int MSG_WIDTH = 0;
 
-const int TOOLS_HEIGHT = 200;
+const int TOOLS_HEIGHT = 150;
 
 static const char *const PATH_TEXTURE[7] = {"extra/texture_wall.PNG",
 	"extra/texture_leaf.PNG", "extra/texture_water.PNG",
