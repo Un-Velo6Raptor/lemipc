@@ -45,7 +45,9 @@ static int loop_game(t_data *data, struct sembuf *sops)
 	if (status == 1) {
 		printf("You die!\n");
 		send_message(data, "die", TEAMS - index(TEAMS, data->player->team_number) + 1);
-		send_message(data, "die", strlen(TEAMS) + 3);
+		char *s = malloc(20);
+		sprintf(s, "%c: I die :'(", data->player->team_number);
+		send_message(data, s, strlen(TEAMS) + 3);
 		return end_game(data, sops, 1);
 	}
 	placement(data->map, data->player);
@@ -56,7 +58,7 @@ static int loop_game(t_data *data, struct sembuf *sops)
 	if (end_game(data, sops, 0) == 84)
 		return 84;
 	char *str = malloc(12);
-	sprintf(str, "%c: %i;%i", data->player->team_number, data->player->pos->x, data->player->pos->y);
+	sprintf(str, "team %c: I go in %i;%i", data->player->team_number, data->player->pos->x, data->player->pos->y);
 	send_message(data, str, TEAMS - index(TEAMS, data->player->team_number) + 1);
 	send_message(data, str, strlen(TEAMS) + 3);
 	usleep((i == 0) ? 1000000 : 300000);
