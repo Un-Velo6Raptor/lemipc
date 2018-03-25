@@ -28,6 +28,7 @@ SRC_DISPLAY	=	src/display/game.c				\
 			src/display/draw_player.c			\
 			src/display/draw_tools.c			\
 			src/parsing/manage_click.c			\
+			src/parsing/get_map_limit.c			\
 			src/parsing/check_arg.c
 
 SRC_MANAGE	=	src/manage_map/manage_leaf.c			\

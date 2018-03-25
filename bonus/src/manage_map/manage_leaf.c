@@ -38,9 +38,6 @@ int tools_manage_leaf(t_data *data, t_window *sdl_data, SDL_Event *ev)
 	(void)sdl_data;
 	index.x = (ev->button.x - MSG_WIDTH) / size.x;
 	index.y = ev->button.y / size.y;
-	if (index.x < 0 || index.x >= MAP_SIZE.x || index.y < 0 ||
-		index.y >= MAP_SIZE.y)
-		return (0);
 	put_a_tree_here(data->map, &index);
 	return (0);
 }
