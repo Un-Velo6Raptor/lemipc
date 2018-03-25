@@ -69,4 +69,5 @@ t_vector get_block_size(void);
 int get_limit_x(int x);
 int get_limit_y(int y);
 
+
 #endif //PSU_LEMIPC_2017_DISPLAY_H
