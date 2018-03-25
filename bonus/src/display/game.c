@@ -89,6 +89,8 @@ int graphical_display(t_data *data)
 	int ret = 0;
 
 	data->map = get_the_map(data);
+	if (!data->map)
+		return (84);
 	srandom(time(NULL));
 	if (create_window(&sdl_data, "Lemipc graphical bonus"))
 		return (84);
