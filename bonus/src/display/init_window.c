@@ -47,9 +47,9 @@ static int create_surface_sdl(t_window *sdl_data)
 {
 	unsigned int idx = 0;
 	int ret = 0;
+	SDL_Surface *tmp;
 
 	IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
-	SDL_Surface *tmp;
 	sdl_data->tools_used = -1;
 	for (; PATH_TEXTURE[idx]; ++idx) {
 		tmp = IMG_Load(PATH_TEXTURE[idx]);

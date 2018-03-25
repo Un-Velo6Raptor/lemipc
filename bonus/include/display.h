@@ -8,7 +8,7 @@
 #ifndef PSU_LEMIPC_2017_DISPLAY_H
 # define PSU_LEMIPC_2017_DISPLAY_H
 
-# include <stdio.h> // TODO: deleted it
+# include <stdio.h>
 # include <SDL2/SDL.h>
 # include <SDL2/SDL_image.h>
 # include <SDL2/SDL_ttf.h>
@@ -16,20 +16,12 @@
 # include "config.h"
 
 extern const int WINDOW_WIDTH;
-
 extern const int WINDOW_HEIGHT;
 
 extern const int MSG_WIDTH;
-
 extern const int TOOLS_HEIGHT;
 
-#ifndef                MAP_WIDTH
-	# define        MAP_WIDTH(x) (WINDOW_WIDTH - MSG_WIDTH - x)
-#endif
-
-#ifndef        MAP_HEIGHT
-	# define        MAP_HEIGHT(y) (WINDOW_HEIGHT - TOOLS_HEIGHT - y)
-#endif
+extern const t_vector MAP_SIZE;
 
 typedef struct s_team {
 	char representation;
@@ -55,37 +47,26 @@ typedef struct s_window {
 } t_window;
 
 int graphical_display(t_data *data);
-
 int check_arg_and_launch_display(int argc, char **argv);
-
 void destroy_sdl_tools(t_window *sdl_data);
 
 int create_window(t_window *sdl_data, char *window_name);
-
 int draw_map_sdl(t_window *sdl_map, char **map);
-
 void draw_player(t_window *sdl_map, t_vector *block_size, char **map);
-
 int draw_tools(t_window *sdl_data);
-
-int draw_history(t_window *sdl_data, t_data *data);
 
 int check_mouse_click(t_data *data, t_window *sdl_data, SDL_Event *ev);
 
-t_vector get_block_tools(t_window *sdl_data);
-
-t_vector get_block_size(void);
-
 int tools_manage_wall(t_data *data, t_window *sdl_data, SDL_Event *ev);
-
 int tools_manage_leaf(t_data *data, t_window *sdl_data, SDL_Event *ev);
-
 int tools_manage_water(t_data *data, t_window *sdl_data, SDL_Event *ev);
-
 int tools_manage_rubber(t_data *data, t_window *sdl_data, SDL_Event *ev);
-
 int tools_manage_reset(t_data *data, t_window *sdl_data, SDL_Event *ev);
-
 int tools_manage_player(t_data *data, t_window *sdl_data, SDL_Event *ev);
+
+t_vector get_block_tools(t_window *sdl_data);
+t_vector get_block_size(void);
+int get_limit_x(int x);
+int get_limit_y(int y);
 
 #endif //PSU_LEMIPC_2017_DISPLAY_H

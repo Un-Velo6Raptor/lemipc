@@ -5,6 +5,7 @@
 ** Created by martin.januario@epitech.eu,
 */
 
+#include <tools.h>
 #include "config.h"
 #include "display.h"
 
@@ -25,36 +26,30 @@ t_vector get_block_size(void)
 static void draw_grid(t_window *sdl_map, t_vector *block_size)
 {
 	SDL_SetRenderDrawColor(sdl_map->renderer, 0, 0, 0, 255);
-	int idx_height = 0;
-	int idx_width = MSG_WIDTH;
+	SDL_Rect tmpy = {MSG_WIDTH, get_limit_y(block_size->y),
+		WINDOW_WIDTH - MSG_WIDTH,
+		WINDOW_HEIGHT - TOOLS_HEIGHT - get_limit_y(block_size->y) + 1};
+	SDL_Rect tmpx = {get_limit_x(block_size->x), 0,
+		WINDOW_WIDTH - get_limit_x(block_size->x),
+		WINDOW_HEIGHT - TOOLS_HEIGHT};
 
-	for (; idx_height + block_size->y <=
+	for (int idx_height = 0; idx_height + block_size->y <=
 		WINDOW_HEIGHT - TOOLS_HEIGHT; idx_height += block_size->y)
 		SDL_RenderDrawLine(sdl_map->renderer, MSG_WIDTH, idx_height,
 			WINDOW_WIDTH, idx_height);
-	for (; idx_width + block_size->x <= WINDOW_WIDTH; idx_width += block_size->x)
+	for (int idx_width = MSG_WIDTH; idx_width + block_size->x <=
+		WINDOW_WIDTH; idx_width += block_size->x)
 		SDL_RenderDrawLine(sdl_map->renderer, idx_width, 0, idx_width,
 			WINDOW_HEIGHT - TOOLS_HEIGHT);
-	SDL_Rect tmp;
 	SDL_SetRenderDrawColor(sdl_map->renderer, 0, 0, 0, 255);
-	if (idx_height < WINDOW_HEIGHT - TOOLS_HEIGHT) {
-		tmp.x = MSG_WIDTH;
-		tmp.y = idx_height;
-		tmp.w = WINDOW_WIDTH - MSG_WIDTH;
-		tmp.h = idx_height;
-		SDL_RenderFillRect(sdl_map->renderer, &tmp);
-	}
-	if (idx_width < WINDOW_WIDTH) {
-		tmp.x = idx_width;
-		tmp.y = 0;
-		tmp.w = idx_width;
-		tmp.h = WINDOW_HEIGHT - TOOLS_HEIGHT;
-		SDL_RenderFillRect(sdl_map->renderer, &tmp);
-	}
+	SDL_RenderFillRect(sdl_map->renderer, &tmpy);
+	SDL_RenderFillRect(sdl_map->renderer, &tmpx);
 }
 
 static int check_new_color(t_window *sdl_map, char player)
 {
+	t_team *new_team = NULL;
+
 	if (player <= 0 || player == ' ')
 		return (0);
 	while (sdl_map->list_team && sdl_map->list_team->next &&
@@ -62,7 +57,7 @@ static int check_new_color(t_window *sdl_map, char player)
 		sdl_map->list_team = sdl_map->list_team->next;
 	if (sdl_map->list_team && sdl_map->list_team->representation == player)
 		return (0);
-	t_team *new_team = malloc(sizeof(t_team) * 1);
+	new_team = malloc(sizeof(t_team) * 1);
 	if (!new_team)
 		return (84);
 	new_team->next = NULL;

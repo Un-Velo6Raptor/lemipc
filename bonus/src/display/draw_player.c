@@ -14,7 +14,6 @@ static SDL_Rect get_block_to_color(t_vector *idx, t_vector *block_size)
 
 	block.x = MSG_WIDTH + (idx->x * block_size->x) + 1;
 	block.w = block_size->x - 1;
-
 	block.y = (idx->y * block_size->y) + 1;
 	block.h = block_size->y - 1;
 	return (block);
@@ -28,7 +27,6 @@ static void fill_rect_player(t_window *sdl_data, t_vector *block_size,
 
 	SDL_SetRenderDrawColor(sdl_data->renderer, player->r, player->g,
 		player->b, 255);
-
 	SDL_RenderFillRect(sdl_data->renderer, &block);
 }
 
