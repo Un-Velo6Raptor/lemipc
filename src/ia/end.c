@@ -48,7 +48,7 @@ bool ended(char **map)
 	bool found = false;
 	bool end = true;
 
-	for (int y = 0; y < MAP_SIZE.y; y++) {
+	for (int y = 0; map[y] && y < MAP_SIZE.y; y++) {
 		for (int x = 0; x < MAP_SIZE.x; x++) {
 			end = (found == true && map[y][x] != team &&
 				map[y][x] != ' ' && map[y][x] > 0) ? false :
@@ -62,14 +62,9 @@ bool ended(char **map)
 	return (end);
 }
 
-int end_game(t_data *data, char **map, struct sembuf *sops, int ret)
+int end_game(t_data *data, struct sembuf *sops, int ret)
 {
-	display_tab(map);
-	if (map && set_new_map(data, map) == 84)
-		ret = 84;
 	sops->sem_op = 1;
 	semop(data->sem_id, sops, 1);
-	if (map)
-		free_tab((void **)map);
 	return ret;
 }

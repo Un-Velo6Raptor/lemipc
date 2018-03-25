@@ -62,7 +62,6 @@ void destroy_memory_shared(t_data *data);
 
 // Manage map
 char **get_the_map(t_data *data);
-int set_new_map(t_data *data, char **map);
 
 // Manage message queue
 int send_message(t_data *data, char *str, long mtype);

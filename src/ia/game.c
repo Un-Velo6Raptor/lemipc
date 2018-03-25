@@ -19,7 +19,6 @@ static int loop_game(t_data *data, struct sembuf *sops, unsigned int index)
 {
 	static unsigned int i = 0;
 	int status;
-	char **tmp;
 	static short end = 0;
 
 	// ANNONCE de l'utilisation de la map
@@ -27,31 +26,28 @@ static int loop_game(t_data *data, struct sembuf *sops, unsigned int index)
 		printf("\033[3J\033[H\033[2J");
 	sops->sem_op = -1;
 	semop(data->sem_id, sops, 1);
-	tmp = get_the_map(data);
-	if (!tmp)
-		return end_game(data, tmp, sops, 84);
-	if (i > 1 && ended(tmp)) {
+	if (i > 1 && ended(data->map)) {
 		if (end == 5) {
-			tmp[data->player->pos->y][data->player->pos->x] = ' ';
-			return end_game(data, tmp, sops, 0);
+			data->map[data->player->pos->y][data->player->pos->x] = ' ';
+			return end_game(data, sops, 0);
 		}
 		end++;
 	} else
 		end = 0;
-	status = ia(data->player, tmp);
+	status = ia(data->player, data->map);
 	if (status == -1)
-		return end_game(data, tmp, sops, 84);
+		return end_game(data, sops, 84);
 	if (status == 1) {
 		printf("You die!\n");
-		return end_game(data, tmp, sops, 1);
+		return end_game(data, sops, 1);
 	}
 	if (data->pos == FIRST)
-		display_tab(tmp);
+		display_tab(data->map);
 	if (i == MAX_ACTION_NUMBER) {
-		tmp[data->player->pos->y][data->player->pos->x] = ' ';
-		return end_game(data, tmp, sops, 0);
+		data->map[data->player->pos->y][data->player->pos->x] = ' ';
+		return end_game(data, sops, 0);
 	}
-	if (end_game(data, tmp, sops, 0) == 84)
+	if (end_game(data, sops, 0) == 84)
 		return 84;
 	if (i == 0)
 		sleep(1);
@@ -66,25 +62,24 @@ int game(t_data *data)
 {
 	struct sembuf sops; // sem_op=-1: U start ur action, sem_op=1: you end it
 	int ret;
-	char **tmp = NULL;
 
 	sops.sem_num = 0;
 	sops.sem_flg = 0;
 	srand(time(NULL));
+	data->map = get_the_map(data);
+	if (!data->map)
+		return 84;
+	display_tab(data->map);
 	ret = loop_game(data, &sops, 0);
 	do {
-		if (tmp)
-			free_tab((void **) tmp);
-		tmp = get_the_map(data);
 		if (data->pos == FIRST)
-			display_tab(tmp);
+			display_tab(data->map);
 		sleep(1);
-	} while (ended(tmp) == false);
+	} while (ended(data->map) == false);
 	if (data->pos == FIRST) {
 		destroy_memory_shared(data);
 		destroy_message_queue(data);
 		destroy_semaphore(data);
 	}
-	free_tab((void **)tmp);
 	return (ret);
 }

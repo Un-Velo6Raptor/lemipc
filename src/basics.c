@@ -7,11 +7,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <config.h>
 #include "transmission.h"
 
 void free_tab(void **tab)
 {
-	for (int idx = 0; tab && tab[idx]; ++idx) {
+	for (int idx = 0; tab && idx < MAP_SIZE.y; ++idx) {
 		free(tab[idx]);
 	}
 	if (tab)
@@ -20,9 +21,7 @@ void free_tab(void **tab)
 
 void display_tab(char **tab)
 {
-	printf("-- START TAB --\n");
-	for (int idx = 0; tab && tab[idx]; ++idx) {
+	for (int idx = 0; tab && idx < MAP_SIZE.y; ++idx) {
 		printf("%d: [%s]\n", idx, tab[idx]);
 	}
-	printf("-- END TAB --\n");
 }
