@@ -15,7 +15,7 @@
 int ia(t_player_info *player, char **map)
 {
 	t_vector *target = NULL;
-	short **distance_map = get_distance_map(player, map);
+	int **distance_map = get_distance_map(player, map);
 
 	if (player->pos->y == -1 || player->pos->x == -1) {
 		player_drop(player, map);

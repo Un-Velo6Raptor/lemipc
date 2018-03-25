@@ -47,11 +47,11 @@ void placement(char **map, t_player_info *data)
 	map[data->pos->y][data->pos->x] = data->team_number;
 }
 
-t_vector *get_next_case(short **map, int y, int x, bool st)
+t_vector *get_next_case(int **map, int y, int x, bool st)
 {
 	t_vector *pos = malloc(sizeof(t_vector));
 	t_vector *ret = NULL;
-	short act = map[y][x];
+	int act = map[y][x];
 
 	if (!pos)
 		return NULL;
@@ -71,7 +71,7 @@ t_vector *get_next_case(short **map, int y, int x, bool st)
 	return (ret) ? ret : pos;
 }
 
-void move_to_target(t_player_info *player, short **distance_map, t_vector *pos)
+void move_to_target(t_player_info *player, int **distance_map, t_vector *pos)
 {
 	t_vector *next = NULL;
 	int distance;

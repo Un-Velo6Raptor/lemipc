@@ -21,7 +21,8 @@ void free_tab(void **tab)
 
 void display_tab(char **tab)
 {
+	printf("\033[3J\033[H\033[2J");
 	for (int idx = 0; tab && idx < MAP_SIZE.y; ++idx) {
-		printf("%d: [%s]\n", idx, tab[idx]);
+		printf("%02d: [%s]\n", idx, tab[idx]);
 	}
 }

@@ -11,9 +11,9 @@
 #include "transmission.h"
 #include "tools.h"
 
-t_vector *select_target(t_player_info *player, char **map, short **distance_map);
+t_vector *select_target(t_player_info *player, char **map, int **distance_map);
 unsigned int get_distance(t_player_info *player, t_vector *pos);
-short get_distance_at(short **map, int y, int x);
-short **get_distance_map(t_player_info *player, char **map);
+int get_distance_at(int **map, int y, int x);
+int **get_distance_map(t_player_info *player, char **map);
 
 #endif //PSU_LEMIPC_2017_TARGET_H

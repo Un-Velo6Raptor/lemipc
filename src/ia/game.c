@@ -24,14 +24,11 @@ static int loop_game(t_data *data, struct sembuf *sops)
 	int status;
 	static short end = 0;
 
-	if (data->pos == FIRST)
-		printf("\033[3J\033[H\033[2J");
 	sops->sem_op = -1;
 	semop(data->sem_id, sops, 1);
 	if (i > 1 && ended(data->map)) {
 		if (end == 5) {
 			send_message(data, "end", strlen(TEAMS) + 2);
-			send_message(data, "end", strlen(TEAMS) + 3);
 			data->map[data->player->pos->y][data->player->pos->x] = ' ';
 			return end_game(data, sops, 0);
 
@@ -45,9 +42,6 @@ static int loop_game(t_data *data, struct sembuf *sops)
 	if (status == 1) {
 		printf("You die!\n");
 		send_message(data, "die", TEAMS - index(TEAMS, data->player->team_number) + 1);
-		char *s = malloc(20);
-		sprintf(s, "%c: I die :'(", data->player->team_number);
-		send_message(data, s, strlen(TEAMS) + 3);
 		return end_game(data, sops, 1);
 	}
 	placement(data->map, data->player);
@@ -60,7 +54,6 @@ static int loop_game(t_data *data, struct sembuf *sops)
 	char *str = malloc(12);
 	sprintf(str, "team %c: I go in %i;%i", data->player->team_number, data->player->pos->x, data->player->pos->y);
 	send_message(data, str, TEAMS - index(TEAMS, data->player->team_number) + 1);
-	send_message(data, str, strlen(TEAMS) + 3);
 	usleep((i == 0) ? 1000000 : 300000);
 	i++;
 	return (loop_game(data, sops));
@@ -79,11 +72,11 @@ int game(t_data *data)
 	if (!data->map)
 		return 84;
 	ret = loop_game(data, &sops);
-	if (data->pos != FIRST)
+	if (data->pos != FIRST) {
 		read_next_message(data, strlen(TEAMS) + 2);
-	else {
+		send_message(data, "end", strlen(TEAMS) + 2);
+	} else {
 		while (ended(data->map) == false) {
-			printf("\033[3J\033[H\033[2J");
 			display_tab(data->map);
 			sleep(1);
 		}
