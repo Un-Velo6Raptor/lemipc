@@ -42,8 +42,7 @@ static int print_team_wheel(t_window *sdl_data, SDL_Rect *texture_dest)
 	texture_dest->y += 40;
 	texture_dest->w = 30;
 	texture_dest->h = 30;
-	surfaceMessage = TTF_RenderText_Solid(sdl_data->fonts_team,
-		tmp, white);
+	surfaceMessage = TTF_RenderText_Solid(sdl_data->fonts_team, tmp, white);
 	message = SDL_CreateTextureFromSurface(sdl_data->renderer,
 		surfaceMessage);
 	SDL_RenderCopy(sdl_data->renderer, message, NULL, texture_dest);
@@ -52,15 +51,12 @@ static int print_team_wheel(t_window *sdl_data, SDL_Rect *texture_dest)
 
 int draw_tools(t_window *sdl_data)
 {
-	SDL_Rect texture_dest;
 	t_vector block = get_block_tools(sdl_data);
+	SDL_Rect texture_dest = {MSG_WIDTH, WINDOW_HEIGHT - TOOLS_HEIGHT + 1,
+		block.x, block.y};
 
 	if (block.x == -1)
 		return (84);
-	texture_dest.x = MSG_WIDTH;
-	texture_dest.y = WINDOW_HEIGHT - TOOLS_HEIGHT + 1;
-	texture_dest.w = block.x;
-	texture_dest.h = block.y;
 	for (int idx = 0; sdl_data->image[idx]; ++idx) {
 		SDL_SetRenderDrawColor(sdl_data->renderer, 0, 0, 0, 255);
 		SDL_RenderCopy(sdl_data->renderer, sdl_data->image[idx], NULL,
