@@ -47,34 +47,28 @@ void placement(char **map, t_player_info *data)
 	map[data->pos->y][data->pos->x] = data->team_number;
 }
 
-t_vector *get_next_case(short **distance_map, int y, int x, bool first)
+t_vector *get_next_case(short **distance_map, int y, int x, bool st)
 {
 	t_vector *pos = malloc(sizeof(t_vector));
+	t_vector *ret = NULL;
 	short act = distance_map[y][x];
 
 	if (!pos)
 		return NULL;
-	if (act == -2 && first == true)
-		act = get_distance_at(distance_map, y, x) + 1;
+	act = act == -2 && st ? get_distance_at(distance_map, y, x) + 1 : act;
 	pos->y = y;
 	pos->x = x;
-	if (act == 1)
-		return pos;
-	if (x > 0 && distance_map[y][x - 1] == act - 1) {
+	if (act != 1 && x > 0 && distance_map[y][x - 1] == act - 1)
+		ret = get_next_case(distance_map, y, x - 1, false);
+	if (act != 1 && x < MAP_SIZE.x - 1 && distance_map[y][x + 1] == act - 1)
+		ret = get_next_case(distance_map, y, x + 1, false);
+	if (act != 1 && y > 0 && distance_map[y - 1][x] == act - 1)
+		ret = get_next_case(distance_map, y - 1, x, false);
+	if (act != 1 && y < MAP_SIZE.y - 1 && distance_map[y + 1][x] == act - 1)
+		ret = get_next_case(distance_map, y + 1, x, false);
+	if (ret)
 		free(pos);
-		return get_next_case(distance_map, y, x - 1, false);
-	} else if (x < MAP_SIZE.x - 1 && distance_map[y][x + 1] == act - 1) {
-		free(pos);
-		return get_next_case(distance_map, y, x + 1, false);
-	}
-	if (y > 0 && distance_map[y - 1][x] == act - 1) {
-		free(pos);
-		return get_next_case(distance_map, y - 1, x, false);
-	} else if (y < MAP_SIZE.y - 1 && distance_map[y + 1][x] == act - 1) {
-		free(pos);
-		return get_next_case(distance_map, y + 1, x, false);
-	}
-	return pos;
+	return (ret) ? ret : pos;
 }
 
 void move_to_target(t_player_info *player, short **distance_map, t_vector *pos)
@@ -86,7 +80,6 @@ void move_to_target(t_player_info *player, short **distance_map, t_vector *pos)
 		return;
 	next = get_next_case(distance_map, pos->y, pos->x, true);
 	distance = get_distance(player, pos);
-	free(pos);
 	if (!next)
 		return;
 	if (distance > 1) {

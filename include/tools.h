@@ -13,6 +13,4 @@ typedef struct {
 	int y;
 } t_vector;
 
-#define ABS(x) ((x) < 0) ? ((x) * -1) : (x)
-
 #endif //PSU_LEMIPC_2017_TOOLS_H

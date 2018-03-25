@@ -68,3 +68,10 @@ int end_game(t_data *data, struct sembuf *sops, int ret)
 	semop(data->sem_id, sops, 1);
 	return ret;
 }
+
+void destroy(t_data *data)
+{
+	destroy_memory_shared(data);
+	destroy_message_queue(data);
+	destroy_semaphore(data);
+}

@@ -61,16 +61,6 @@ static t_vector *get_nearest(t_player_info *player, char **map, short **distance
 	return tmp;
 }
 
-void display_distancemap(short **distance_map)
-{
-	for (int i = 0; i < MAP_SIZE.y; i++) {
-		for (int j = 0; j < MAP_SIZE.x; j++) {
-			printf("%i ", distance_map[i][j]);
-		}
-		printf("\n");
-	}
-}
-
 static void set_distance(t_player_info *player, short **distance_map, char **map, t_vector *pos)
 {
 	short distance;
@@ -80,8 +70,7 @@ static void set_distance(t_player_info *player, short **distance_map, char **map
 		return;
 	if (player->pos->x == pos->x && player->pos->y == pos->y) {
 		distance_map[pos->y][pos->x] = 0;
-	}
-	else {
+	} else {
 		if (map[pos->y][pos->x] < 0) {
 			distance_map[pos->y][pos->x] = map[pos->y][pos->x];
 			return;
