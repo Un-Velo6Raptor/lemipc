@@ -19,7 +19,8 @@ SRC	=	src/parsing/check_arg.c			\
 		src/ia/ia.c				\
 		src/ia/placement.c			\
 		src/ia/target.c				\
-		src/ia/end.c
+		src/ia/end.c				\
+		src/ia/pathfinding.c
 
 OBJ	=	$(SRC:.c=.o)
 

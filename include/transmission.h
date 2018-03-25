@@ -63,7 +63,7 @@ char **get_the_map(t_data *data);
 
 // Manage message queue
 int send_message(t_data *data, const char *str, long mtype);
-t_msg_data *read_next_message(t_data *data, long mtype);
+t_msg_data *read_next_message(t_data *data, long mtype, int flag);
 t_msg_data *get_next_message_team(t_data *data, long mtpye);
 t_msg_data *get_specific_message(t_data *data, long mtype, char *pattern,
 	int opt);

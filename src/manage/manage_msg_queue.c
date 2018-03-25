@@ -17,14 +17,13 @@ int send_message(t_data *data, const char *str, long mtype)
 	t_msg_data tmp;
 
 	bzero(&tmp, sizeof(t_msg_data));
-	// Te permet de savoir lorsque tu reçois un message si il a été transmis par le capitaine. Attention, si le capitaine meurt. Son message reste en temps que capitaine
 	tmp.mtype = mtype;
 	strncpy(tmp.mtext, str, MSG_SIZE);
 	msgsnd(data->msgq_id, &tmp, MSG_SIZE, IPC_NOWAIT);
 	return (0);
 }
 
-t_msg_data *read_next_message(t_data *data, long mtype)
+t_msg_data *read_next_message(t_data *data, long mtype, int flag)
 {
 	t_msg_data *msg = malloc(sizeof(t_msg_data) * 1);
 
@@ -33,19 +32,19 @@ t_msg_data *read_next_message(t_data *data, long mtype)
 		return (NULL);
 	}
 	msg->mtype = mtype;
-	// Attention, si pas de message ou pas de message avec ce mtype. Il va wait un message
-	msgrcv(data->msgq_id, msg, MSG_SIZE, mtype, 0);
+	msgrcv(data->msgq_id, msg, MSG_SIZE, mtype, flag);
 	return (msg);
 }
 
-// opt=1 : check for the specific message in the team. opt=0 : search for the specific message in every team
+// opt = 1 : check for the specific message in the team. opt = 0 :
+// search for the specific message in every team
 // Infinite loop while she get the specific message, take care
 // U can get the message send by the same client, take care too
 t_msg_data *get_specific_message(t_data *data, long mtype, char *pattern,
 	int opt
 )
 {
-	t_msg_data *tmp = read_next_message(data, mtype);
+	t_msg_data *tmp = read_next_message(data, mtype, 0);
 	t_data msg_return;
 
 	if (!tmp)

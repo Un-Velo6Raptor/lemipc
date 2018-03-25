@@ -18,4 +18,6 @@ extern const unsigned int MSG_SIZE;
 
 extern const unsigned int MAX_ACTION_NUMBER;
 
+#define TIDX(x) (TEAMS - (index(TEAMS, (x)) + (1)))
+
 #endif //PSU_LEMIPC_2017_CONFIG_H

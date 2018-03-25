@@ -8,7 +8,6 @@
 #include <config.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 #include "transmission.h"
 
 unsigned int get_distance(t_player_info *player, t_vector *pos)
@@ -33,89 +32,43 @@ int get_distance_at(int **map, int y, int x)
 	return ret;
 }
 
-static t_vector *get_nearest(t_player_info *player, char **map, int **distance_map)
+static void check_nearest(t_data *data, int **distance_map, t_vector **vec,
+	int *dist
+)
 {
-	t_vector *tmp = malloc(sizeof(t_vector));
+	if (data->map[vec[1]->y][vec[1]->x] != ' ' &&
+		data->map[vec[1]->y][vec[1]->x] != data->player->team_number &&
+		data->map[vec[1]->y][vec[1]->x] > 0 &&
+		get_distance_at(distance_map, vec[1]->y, vec[1]->x) < *dist &&
+		get_distance_at(distance_map, vec[1]->y, vec[1]->x) >= 0) {
+		*dist = get_distance_at(distance_map, vec[1]->y, vec[1]->x);
+		fill_vector(vec[0], vec[1]->x, vec[1]->y);
+	}
+}
+
+static t_vector *get_nearest(t_data *data, int **distance_map)
+{
+	t_vector *tmp[2] = {malloc(sizeof(t_vector)), &(t_vector){0, 0}};
 	int distance = MAP_SIZE.x + MAP_SIZE.y;
 
-	if (!tmp || !distance_map)
+	if (!tmp[0] || !distance_map)
 		return NULL;
-	tmp->x = -1;
-	tmp->y = -1;
-	for (int y = 0; y < MAP_SIZE.y; y++) {
-		for (int x = 0; x < MAP_SIZE.x; x++) {
-			if (map[y][x] != ' ' && map[y][x] != player->team_number
-				&& map[y][x] > 0
-				&& get_distance_at(distance_map, y, x) < distance &&
-				get_distance_at(distance_map, y, x) >= 0) {
-				distance = get_distance_at(distance_map, y, x);
-				tmp->x = x;
-				tmp->y = y;
-			}
+	fill_vector(tmp[0], -1, -1);
+	for (tmp[1]->y = 0; tmp[1]->y < MAP_SIZE.y; tmp[1]->y++) {
+		for (tmp[1]->x = 0; tmp[1]->x < MAP_SIZE.x; tmp[1]->x++) {
+			check_nearest(data, distance_map, tmp, &distance);
 		}
 	}
-	if (tmp->x == -1 || tmp->y == -1) {
-		free(tmp);
+	if (tmp[0]->x == -1 || tmp[0]->y == -1) {
+		free(tmp[0]);
 		return NULL;
 	}
-	return tmp;
+	return tmp[0];
 }
 
-static void set_distance(t_player_info *player, int **distance_map, char **map, t_vector *pos)
+t_vector *select_target(t_data *data, int **distance_map)
 {
-	int distance;
-	t_vector dir = {pos->x - 1, pos->y};
-
-	if (pos->y < 0 || pos->y >= MAP_SIZE.y || pos->x < 0 || pos->x >= MAP_SIZE.x)
-		return;
-	if (player->pos->x == pos->x && player->pos->y == pos->y) {
-		distance_map[pos->y][pos->x] = 0;
-	} else {
-		if (map[pos->y][pos->x] < 0) {
-			distance_map[pos->y][pos->x] = map[pos->y][pos->x];
-			return;
-		} else if (map[pos->y][pos->x] != ' ') {
-			distance_map[pos->y][pos->x] = -2;
-			return;
-		}
-		distance = get_distance_at(distance_map, pos->y, pos->x) + 1;
-		if (distance_map[pos->y][pos->x] <= distance &&
-			distance != 0 && distance_map[pos->y][pos->x] != -1)
-			return;
-		distance_map[pos->y][pos->x] = distance;
-	}
-	set_distance(player, distance_map, map, &dir);
-	dir.x = pos->x + 1;
-	set_distance(player, distance_map, map, &dir);
-	dir.x = pos->x;
-	dir.y = pos->y - 1;
-	set_distance(player, distance_map, map, &dir);
-	dir.y = pos->y + 1;
-	set_distance(player, distance_map, map, &dir);
-}
-
-int **get_distance_map(t_player_info *player, char **map)
-{
-	int **distance_map = malloc(sizeof(int *) * (MAP_SIZE.y + 1));
-
-	if (!distance_map)
-		return NULL;
-	for (int i = 0; i < MAP_SIZE.y; i++) {
-		distance_map[i] = malloc(sizeof(int) * (MAP_SIZE.x + 1));
-		if (!distance_map[i])
-			return NULL;
-		for (int j = 0; j < MAP_SIZE.x; j++)
-			distance_map[i][j] = -1;
-		distance_map[i][MAP_SIZE.x] = '\0';
-	}
-	distance_map[MAP_SIZE.y] = NULL;
-	set_distance(player, distance_map, map, player->pos);
-	return distance_map;
-}
-
-t_vector *select_target(t_player_info *player, char **map, int **distance_map)
-{
-	t_vector *nearest = get_nearest(player, map, distance_map);
+	t_vector *nearest = get_nearest(data, distance_map);
 
 	return nearest;
 }

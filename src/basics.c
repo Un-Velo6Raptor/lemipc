@@ -26,3 +26,9 @@ void display_tab(char **tab)
 		printf("%02d: [%s]\n", idx, tab[idx]);
 	}
 }
+
+void fill_vector(t_vector *vector, int x, int y)
+{
+	vector->x = x;
+	vector->y = y;
+}

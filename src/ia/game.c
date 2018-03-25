@@ -5,7 +5,7 @@
 ** Created by martin.januario@epitech.eu,
 */
 
-#include <stdio.h> // TODO: deleted it
+#include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -18,45 +18,64 @@
 #include "end.h"
 #include "placement.h"
 
+static int start_ai(t_data *data, struct sembuf *sops, unsigned int *act)
+{
+	int status = ia(data);
+
+	if (*act == MAX_ACTION_NUMBER)
+		return end_game(data, sops, 1);
+	if (*act)
+		read_next_message(data, TIDX(data->player->team_number),
+			IPC_NOWAIT);
+	if (status == 1) {
+		printf("You die\n");
+		send_message(data, "die", TIDX(data->player->team_number));
+	} else if (!status) {
+		placement(data->map, data->player);
+		if (data->pos == FIRST)
+			display_tab(data->map);
+	}
+	(*act)++;
+	return end_game(data, sops, status);
+}
+
 static int loop_game(t_data *data, struct sembuf *sops)
 {
 	static unsigned int i = 0;
 	int status;
-	static short end = 0;
+	static unsigned int end = 0;
+	char str[12];
 
 	sops->sem_op = -1;
 	semop(data->sem_id, sops, 1);
-	if (i > 1 && ended(data->map)) {
-		if (end == 5) {
-			send_message(data, "end", strlen(TEAMS) + 2);
-			data->map[data->player->pos->y][data->player->pos->x] = ' ';
-			return end_game(data, sops, 0);
-
-		}
-		end++;
-	} else
-		end = 0;
-	status = ia(data->player, data->map);
-	if (status == -1)
-		return end_game(data, sops, 84);
-	if (status == 1) {
-		printf("You die!\n");
-		send_message(data, "die", TEAMS - index(TEAMS, data->player->team_number) + 1);
-		return end_game(data, sops, 1);
-	}
-	placement(data->map, data->player);
-	if (data->pos == FIRST)
-		display_tab(data->map);
-	if (i == MAX_ACTION_NUMBER)
+	end = i > 1 && ended(data->map) ? end + 1 : 0;
+	if (end == 5) {
+		send_message(data, "end", strlen(TEAMS) + 2);
+		data->map[data->player->pos->y][data->player->pos->x] = ' ';
 		return end_game(data, sops, 0);
-	if (end_game(data, sops, 0) == 84)
-		return 84;
-	char *str = malloc(12);
-	sprintf(str, "team %c: I go in %i;%i", data->player->team_number, data->player->pos->x, data->player->pos->y);
-	send_message(data, str, TEAMS - index(TEAMS, data->player->team_number) + 1);
+	}
+	status = start_ai(data, sops, &i);
+	if (status)
+		return status == 84 ? status : 0;
+	sprintf(str, "%02i;%02i", data->player->pos->x, data->player->pos->y);
+	send_message(data, str, TIDX(data->player->team_number));
 	usleep((i == 0) ? 1000000 : 300000);
-	i++;
 	return (loop_game(data, sops));
+}
+
+static void wait_end_game(t_data *data)
+{
+	if (data->pos != FIRST) {
+		read_next_message(data, strlen(TEAMS) + 2, 0);
+		send_message(data, "end", strlen(TEAMS) + 2);
+	} else {
+		while (ended(data->map) == false) {
+			display_tab(data->map);
+			sleep(1);
+		}
+		sleep(10);
+		destroy(data);
+	}
 }
 
 // This function is the first call, place your player in the map here
@@ -72,17 +91,7 @@ int game(t_data *data)
 	if (!data->map)
 		return 84;
 	ret = loop_game(data, &sops);
-	if (data->pos != FIRST) {
-		read_next_message(data, strlen(TEAMS) + 2);
-		send_message(data, "end", strlen(TEAMS) + 2);
-	} else {
-		while (ended(data->map) == false) {
-			display_tab(data->map);
-			sleep(1);
-		}
-		sleep(10);
-		destroy(data);
-	}
+	wait_end_game(data);
 	free(data->map);
 	return (ret);
 }

@@ -12,11 +12,11 @@
 
 char **get_the_map(t_data *data)
 {
-	char **map = malloc(sizeof(char [MAP_SIZE.y + 1][MAP_SIZE.x + 1]));
+	char **map = malloc(sizeof(char[MAP_SIZE.y + 1][MAP_SIZE.x + 1]));
 	char *str = shmat(data->shm_id, NULL, SHM_R | SHM_W);
 	int y = 0;
 
-	if (!map || str == (void *) -1)
+	if (!map || str == (void *)-1)
 		return NULL;
 	for (; y < MAP_SIZE.y; y++) {
 		map[y] = str;

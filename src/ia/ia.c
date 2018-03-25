@@ -12,25 +12,25 @@
 #include "target.h"
 #include "end.h"
 
-int ia(t_player_info *player, char **map)
+int ia(t_data *data)
 {
 	t_vector *target = NULL;
-	int **distance_map = get_distance_map(player, map);
+	int **distance_map = get_distance_map(data->player, data->map);
 
-	if (player->pos->y == -1 || player->pos->x == -1) {
-		player_drop(player, map);
+	if (data->player->pos->y == -1 || data->player->pos->x == -1) {
+		player_drop(data->player, data->map);
 		free_tab((void **)distance_map);
-		if (!player->pos)
+		if (!data->player->pos)
 			return -1;
-		distance_map = get_distance_map(player, map);
+		distance_map = get_distance_map(data->player, data->map);
 	}
-	map[player->pos->y][player->pos->x] = ' ';
-	if (is_dead(player, map)) {
+	data->map[data->player->pos->y][data->player->pos->x] = ' ';
+	if (is_dead(data->player, data->map)) {
 		free_tab((void **)distance_map);
 		return 1;
 	}
-	target = select_target(player, map, distance_map);
-	move_to_target(player, distance_map, target);
+	target = select_target(data, distance_map);
+	move_to_target(data->player, distance_map, target);
 	free_tab((void **)distance_map);
 	free(target);
 	return 0;

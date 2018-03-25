@@ -10,6 +10,6 @@
 
 #include "transmission.h"
 
-int ia(t_player_info *player, char **map);
+int ia(t_data *data);
 
 #endif //PSU_LEMIPC_2017_IA_H

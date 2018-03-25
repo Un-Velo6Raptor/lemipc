@@ -16,14 +16,16 @@ static int create_memory_shared(t_data *data, key_t key)
 {
 	char *map;
 
-	data->shm_id = shmget(key, (unsigned int)((MAP_SIZE.x + 1) * MAP_SIZE.y),
+	data->shm_id = shmget(key,
+		(unsigned int)((MAP_SIZE.x + 1) * MAP_SIZE.y),
 		IPC_CREAT | SHM_R | SHM_W);
 	data->pos = FIRST;
 	if (data->shm_id == -1)
 		return (84);
 	map = shmat(data->shm_id, NULL, SHM_R | SHM_W);
 	memset(map, ' ', (MAP_SIZE.x + 1) * MAP_SIZE.y);
-	for (int i = MAP_SIZE.x; i < MAP_SIZE.y * (MAP_SIZE.x + 1); i += MAP_SIZE.x + 1) {
+	for (int i = MAP_SIZE.x;
+		i < MAP_SIZE.y * (MAP_SIZE.x + 1); i += MAP_SIZE.x + 1) {
 		map[i] = '\0';
 	}
 

@@ -13,4 +13,6 @@ typedef struct {
 	int y;
 } t_vector;
 
+void fill_vector(t_vector *vector, int x, int y);
+
 #endif //PSU_LEMIPC_2017_TOOLS_H
