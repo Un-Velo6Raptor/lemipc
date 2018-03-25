@@ -26,11 +26,12 @@ static int loop_game(t_data *data, struct sembuf *sops, unsigned int index)
 		printf("\033[3J\033[H\033[2J");
 	sops->sem_op = -1;
 	semop(data->sem_id, sops, 1);
-	if (data->player->pos->x != -1 && data->player->pos->y != -1)
-		data->map[data->player->pos->y][data->player->pos->x] = ' ';
 	if (i > 1 && ended(data->map)) {
-		if (end == 5)
+		if (end == 5) {
+			data->map[data->player->pos->y][data->player->pos->x] = ' ';
 			return end_game(data, sops, 0);
+
+		}
 		end++;
 	} else
 		end = 0;
@@ -48,7 +49,7 @@ static int loop_game(t_data *data, struct sembuf *sops, unsigned int index)
 		return end_game(data, sops, 0);
 	if (end_game(data, sops, 0) == 84)
 		return 84;
-	sleep((i == 0) ? 1000000 : 300000);
+	usleep((i == 0) ? 1000000 : 300000);
 	i++;
 	return (loop_game(data, sops, index + 1));
 }

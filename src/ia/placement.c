@@ -47,25 +47,25 @@ void placement(char **map, t_player_info *data)
 	map[data->pos->y][data->pos->x] = data->team_number;
 }
 
-t_vector *get_next_case(short **distance_map, int y, int x, bool st)
+t_vector *get_next_case(short **map, int y, int x, bool st)
 {
 	t_vector *pos = malloc(sizeof(t_vector));
 	t_vector *ret = NULL;
-	short act = distance_map[y][x];
+	short act = map[y][x];
 
 	if (!pos)
 		return NULL;
-	act = act == -2 && st ? get_distance_at(distance_map, y, x) + 1 : act;
+	act = act == -2 && st ? get_distance_at(map, y, x) + 1 : act;
 	pos->y = y;
 	pos->x = x;
-	if (act != 1 && x > 0 && distance_map[y][x - 1] == act - 1)
-		ret = get_next_case(distance_map, y, x - 1, false);
-	if (act != 1 && x < MAP_SIZE.x - 1 && distance_map[y][x + 1] == act - 1)
-		ret = get_next_case(distance_map, y, x + 1, false);
-	if (act != 1 && y > 0 && distance_map[y - 1][x] == act - 1)
-		ret = get_next_case(distance_map, y - 1, x, false);
-	if (act != 1 && y < MAP_SIZE.y - 1 && distance_map[y + 1][x] == act - 1)
-		ret = get_next_case(distance_map, y + 1, x, false);
+	if (act != 1 && x > 0 && map[y][x - 1] == act - 1)
+		ret = get_next_case(map, y, x - 1, false);
+	if (!ret && act != 1 && x < MAP_SIZE.x - 1 && map[y][x + 1] == act - 1)
+		ret = get_next_case(map, y, x + 1, false);
+	if (!ret && act != 1 && y > 0 && map[y - 1][x] == act - 1)
+		ret = get_next_case(map, y - 1, x, false);
+	if (!ret && act != 1 && y < MAP_SIZE.y - 1 && map[y + 1][x] == act - 1)
+		ret = get_next_case(map, y + 1, x, false);
 	if (ret)
 		free(pos);
 	return (ret) ? ret : pos;
